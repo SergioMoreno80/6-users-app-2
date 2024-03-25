@@ -51,7 +51,7 @@ pdf.text('Movimiento de activo', 70,20);
 const columnas = ["id", "fecha", "descripcion", "id_sucursal", "id_departamento"];
 
 const datos = [
-  [id, fecha_movimiento, descripcion, id_sucursal, id_departamento]
+  [id, formattedDate, descripcion, id_sucursal, id_departamento]
   // Agrega más filas aquí si es necesario
 ];
 
