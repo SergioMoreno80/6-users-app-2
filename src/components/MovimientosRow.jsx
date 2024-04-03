@@ -70,19 +70,11 @@ pdf.save('movimiento_'.concat(id).concat('.pdf'));
   return (
     <React.Fragment>
       <TableRow sx={{ "& > *": { borderBottom: "unset" } }}>
-        <TableCell>
-          <IconButton
-            aria-label="expand row"
-            size="small"
-            onClick={() => setOpen(!open)}
-          >
-            {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
-          </IconButton>
-        </TableCell>
-        <TableCell>
-          <img src={id} alt={id} style={{ width: "50px" }} />
-        </TableCell>
-        <TableCell component="th" scope="row" align="left">
+ 
+ 
+        <TableCell align="center">{id}</TableCell>
+
+        <TableCell component="th" scope="row" align="center">
           {tipo_movimiento}
         </TableCell>
 
@@ -110,28 +102,7 @@ pdf.save('movimiento_'.concat(id).concat('.pdf'));
           ></Button>
         </TableCell>
       </TableRow>
-      <TableRow>
-        <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
-          <Collapse in={open} timeout="auto" unmountOnExit>
-            <Box sx={{ margin: 1 }}>
-              <Typography variant="h6" gutterBottom component="div">
-                History
-              </Typography>
-              <Table size="small" aria-label="purchases">
-                <TableHead>
-                  <TableRow>
-                    <TableCell>Fecha del movimiento</TableCell>
-                    <TableCell>Asignado a</TableCell>
-                    <TableCell align="right">Ubicacion</TableCell>
-                    <TableCell align="right">Departamento </TableCell>
-                  </TableRow>
-                </TableHead>
-                <TableBody></TableBody>
-              </Table>
-            </Box>
-          </Collapse>
-        </TableCell>
-      </TableRow>
+
     </React.Fragment>
   );
 };

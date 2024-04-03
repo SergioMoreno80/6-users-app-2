@@ -48,11 +48,11 @@ export const MovimientosList = () => {
       <Table aria-label="collapsible table">
         <TableHead style={{ backgroundColor: "#000" }}>
           <TableRow>
-            <TableCell />
             <TableCell style={{ color: "#fff", fontWeight: "bold" }}>
               ID
             </TableCell>
-            <TableCell style={{ color: "#fff", fontWeight: "bold" }}>
+            <TableCell style={{ color: "#fff", fontWeight: "bold" }}
+            align="center">
               TIPO DE MOVIMIENTO
             </TableCell>
             <TableCell
@@ -117,12 +117,7 @@ export const MovimientosList = () => {
            
         </TableBody>
       </Table>
-      <IconButton
-        onClick={toggleTableSize}
-        style={{ position: "absolute", top: "8px", left: "8px", zIndex: 1 }}
-      >
-        <MenuIcon />
-      </IconButton>
+
     </TableContainer>
   );
 };

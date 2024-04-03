@@ -7,7 +7,8 @@ const BASE_URL = '';
   export const findAll = async () => {
     try {
       const response = await movimientosApi.get(`${BASE_URL}/cargaSucursales`);
-      // console.log("function finAll() sucursales. ");
+      console.log("response data sucursales: ", response);
+
       return response;
     } catch (error) {
       throw new Error('Error al cargar los sucursales ');

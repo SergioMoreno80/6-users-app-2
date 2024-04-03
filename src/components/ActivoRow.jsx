@@ -1,4 +1,4 @@
-import { NavLink } from "react-router-dom"
+import { NavLink } from "react-router-dom";
 import { useActivos } from "../hooks/useActivos";
 import { useAuth } from "../auth/hooks/useAuth";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
@@ -9,40 +9,52 @@ import Collapse from "@mui/material/Collapse";
 import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
 import React, { useState } from "react";
-import { format } from 'date-fns';
+import { format } from "date-fns";
 
 import {
-    Table,
-    TableBody,
-    TableCell,
-    TableContainer,
-    TableHead,
-    TableRow,
-    Paper,
-    Button,
-  } from "@mui/material";
-  import pc from "../images/pc escritorio.webp"; // Ajusta la ruta a tu imagen de logotipo
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Paper,
+  Button,
+} from "@mui/material";
+import pc from "../images/pc escritorio.webp"; // Ajusta la ruta a tu imagen de logotipo
 
-export const ActivoRow = ({ imagen, activo_id, nombre, descripcion, factura, fecha_compra, no_serie, modelo, importe, proveedor_id, estatus }) => {
-    const { handlerActivoSelectedForm, handlerRemoveActivo } = useActivos();
-    const { login } = useAuth();
-    const [open, setOpen] = React.useState(false);
-    const formattedCurrency = new Intl.NumberFormat('es-ES', {
-        style: 'currency',
-        currency: 'MXN', // Puedes ajustar la moneda según tus necesidades
-        minimumFractionDigits: 2,
-      }).format(importe);
+export const ActivoRow = ({
+  imagen,
+  activo_id,
+  nombre,
+  descripcion,
+  factura,
+  fecha_compra,
+  no_serie,
+  modelo,
+  importe,
+  proveedor_id,
+  estatus,
+  foto,
+}) => {
+  const { handlerActivoSelectedForm, handlerRemoveActivo } = useActivos();
+  const { login } = useAuth();
+  const [open, setOpen] = React.useState(false);
+  const formattedCurrency = new Intl.NumberFormat("es-ES", {
+    style: "currency",
+    currency: "MXN", // Puedes ajustar la moneda según tus necesidades
+    minimumFractionDigits: 2,
+  }).format(importe);
 
-      // Convertir la cadena a un objeto Date
+  // Convertir la cadena a un objeto Date
   const dateObject = new Date(fecha_compra);
 
   // Dar formato a la fecha utilizando date-fns
-  const formattedDate = format(dateObject, 'dd/MM/yyyy');
-//      <TableCell>{formattedDate}</TableCell>
+  const formattedDate = format(dateObject, "dd/MM/yyyy");
+  //      <TableCell>{formattedDate}</TableCell>
 
-
-    return (
-        <React.Fragment>
+  return (
+    <React.Fragment>
       <TableRow sx={{ "& > *": { borderBottom: "unset" } }}>
         <TableCell>
           <IconButton
@@ -54,11 +66,7 @@ export const ActivoRow = ({ imagen, activo_id, nombre, descripcion, factura, fec
           </IconButton>
         </TableCell>
         <TableCell>
-          <img
-            src={imagen}
-            alt={activo_id}
-            style={{ width: "50px" }}
-          />
+          <img src={`http://localhost:8080/imagenes/${foto}`} alt={foto} style={{ width: "50px" }} />
         </TableCell>
         <TableCell component="th" scope="row" align="left">
           {nombre}
@@ -68,6 +76,7 @@ export const ActivoRow = ({ imagen, activo_id, nombre, descripcion, factura, fec
         <TableCell align="center">{formattedDate}</TableCell>
         <TableCell align="center">{formattedCurrency}</TableCell>
         <TableCell align="center">{proveedor_id}</TableCell>
+
         <TableCell align="center">
           <Button
             variant="contained"
@@ -95,7 +104,6 @@ export const ActivoRow = ({ imagen, activo_id, nombre, descripcion, factura, fec
                   </TableRow>
                 </TableHead>
                 <TableBody>
-
                   {/* {row.history.map((historyRow) => (
                     <TableRow key={historyRow.date}>
                       <TableCell component="th" scope="row">
@@ -107,7 +115,6 @@ export const ActivoRow = ({ imagen, activo_id, nombre, descripcion, factura, fec
             
                     </TableRow>
                   ))} */}
-
                 </TableBody>
               </Table>
             </Box>
@@ -115,56 +122,56 @@ export const ActivoRow = ({ imagen, activo_id, nombre, descripcion, factura, fec
         </TableCell>
       </TableRow>
     </React.Fragment>
-        
-        // <TableCell component="th" scope="row" align="left">
-        //   {nombre}
-        // </TableCell>
 
-        // <TableCell align="center">{descripcion}</TableCell>
-        // <TableCell align="center">{fecha_compra}</TableCell>
-        // <TableCell align="center">{factura}</TableCell>
-        // <tr>
-        //     <td>{id}</td>
-        //     <td>{nombre}</td>
-        //     <td>{descripcion}</td>
-        //     <td>{factura}</td>
-        //     <td>{fecha_compra}</td>
-        //     <td>{no_serie}</td>
-        //     <td>{modelo}</td>
+    // <TableCell component="th" scope="row" align="left">
+    //   {nombre}
+    // </TableCell>
 
-        //     {!login.isAdmin ||
-        //         <>
-        //             <td>
-        //                 <button
-        //                     type="button"
-        //                     className="btn btn-secondary btn-sm"
-        //                     onClick={() => handlerActivoSelectedForm({
-        //                         id,
-        //                         nombre,
-        //                         descripcion
-                                
-        //                     })}
-        //                 >
-        //                     Editar
-        //                 </button>
-        //             </td>
-        //             <td>
-        //                 <NavLink className={'btn btn-secondary btn-sm'}
-        //                     to={'/users/edit/' + id} >
-        //                     update route
-        //                 </NavLink>
-        //             </td>
-        //             <td>
-        //                 <button
-        //                     type="button"
-        //                     className="btn btn-danger btn-sm"
-        //                     onClick={() => handlerRemoveActivo(id)}
-        //                 >
-        //                     Eliminar
-        //                 </button>
-        //             </td>
-        //         </>
-        //     }
-        // </tr>
-    )
-}
+    // <TableCell align="center">{descripcion}</TableCell>
+    // <TableCell align="center">{fecha_compra}</TableCell>
+    // <TableCell align="center">{factura}</TableCell>
+    // <tr>
+    //     <td>{id}</td>
+    //     <td>{nombre}</td>
+    //     <td>{descripcion}</td>
+    //     <td>{factura}</td>
+    //     <td>{fecha_compra}</td>
+    //     <td>{no_serie}</td>
+    //     <td>{modelo}</td>
+
+    //     {!login.isAdmin ||
+    //         <>
+    //             <td>
+    //                 <button
+    //                     type="button"
+    //                     className="btn btn-secondary btn-sm"
+    //                     onClick={() => handlerActivoSelectedForm({
+    //                         id,
+    //                         nombre,
+    //                         descripcion
+
+    //                     })}
+    //                 >
+    //                     Editar
+    //                 </button>
+    //             </td>
+    //             <td>
+    //                 <NavLink className={'btn btn-secondary btn-sm'}
+    //                     to={'/users/edit/' + id} >
+    //                     update route
+    //                 </NavLink>
+    //             </td>
+    //             <td>
+    //                 <button
+    //                     type="button"
+    //                     className="btn btn-danger btn-sm"
+    //                     onClick={() => handlerRemoveActivo(id)}
+    //                 >
+    //                     Eliminar
+    //                 </button>
+    //             </td>
+    //         </>
+    //     }
+    // </tr>
+  );
+};

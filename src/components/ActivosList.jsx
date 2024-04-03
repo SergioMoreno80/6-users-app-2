@@ -121,7 +121,7 @@ export const ActivosList = () => {
           ))} */}
           {
                 activos.map(({ //imagen, 
-                  activo_id, nombre, descripcion, factura, fecha_compra, no_serie, modelo, importe, proveedor_id, estatus }) => (
+                  activo_id, nombre, descripcion, factura, fecha_compra, no_serie, modelo, importe, proveedor_id, estatus, foto }) => (
                     <ActivoRow
                         key={activo_id}
                         id={activo_id}
@@ -135,6 +135,7 @@ export const ActivosList = () => {
                         importe={importe}
                         proveedor_id={proveedor_id}
                         estatus={estatus}
+                        foto={foto}
                     />
                 ))
             }

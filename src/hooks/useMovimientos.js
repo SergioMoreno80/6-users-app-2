@@ -31,6 +31,8 @@ export const useMovimientos = () => {
   const getMovimientos = async (page = 0) => {
     try {
       const result = await findAllPages(page);
+      console.log("response data movimientos: ", result);
+
       dispatch(loadingData(result.data));
     } catch (error) {
       if (error.response?.status == 401) {

@@ -12,7 +12,7 @@ export const useSucursales = () => {
   const getSucursales = async () => {
     try {
       const result = await findAll();
-      // console.log('Lista de sucursales desde hook - :', result.data); // Agregar este console.log
+      console.log('Lista de sucursales desde hook - :', result.data); // Agregar este console.log
       dispatch(loadingData(result.data));
     } catch (error) {
       if (error.response?.status == 401) {

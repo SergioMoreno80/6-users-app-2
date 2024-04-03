@@ -19,6 +19,7 @@ export const initialActivoForm = {
   estatus: "",
   clave_busqueda: "",
   imagen: "",
+  foto: "",
 };
 const initialErrors = {
   nombre: "",
@@ -38,6 +39,7 @@ const initialErrors = {
   estatus: "",
   clave_busqueda: "",
   imagen: "",
+  foto: "",
   admin: false,
 };
 export const activosSlice = createSlice({

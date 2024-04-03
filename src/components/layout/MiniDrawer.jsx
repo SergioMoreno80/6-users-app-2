@@ -257,7 +257,7 @@ export const MiniDrawer = () => {
               </ListItemIcon>
               <ListItemText
                 color="primary"
-                primary="Activos"
+                primary="List Activos"
                 primaryTypographyProps={{ style: { color: "#9AE6F0" } }} // Cambiar el color del texto
               />
             </ListItem>
@@ -297,7 +297,7 @@ export const MiniDrawer = () => {
               </ListItemIcon>
               <ListItemText
                 // primary="Mantenimiento"
-                                primary="Listado de Activos"
+                                primary="Lista de Movimientos"
 
                 primaryTypographyProps={{ style: { color: "#9AE6F0" } }} // Cambiar el color del texto
               />
@@ -332,7 +332,7 @@ export const MiniDrawer = () => {
                 <ListAltIcon color="primary" />
               </ListItemIcon>
               <ListItemText
-                primary="Listado de Activos"
+                primary="Lista de Activos"
                 primaryTypographyProps={{ style: { color: "#9AE6F0" } }} // Cambiar el color del texto
               />
             </ListItem>
