@@ -36,7 +36,7 @@ export const save = async ({
   clave_busqueda,
   importe,
   fecha_compra,
-  fecha_ingreso, imagen,}) => {
+  fecha_ingreso, imagen, doc}) => {
   try {
     const config = {
       headers: {
@@ -62,6 +62,9 @@ export const save = async ({
      // Agrega la imagen si está presente
      if (imagen) {
       formData.append('imagen', imagen);
+    }
+    if (doc) {
+      formData.append('doc', doc);
     }
     return await activosApi.post(BASE_URL, formData);
       //return await activosApi.post(BASE_URL, formData, config);
@@ -147,7 +150,7 @@ export const save2 = async ({
 };
 
 export const update = async ({ 
-    id, nombre,
+    activo_id, nombre,
     descripcion,
     fabricante_id,
     modelo,
@@ -161,11 +164,12 @@ export const update = async ({
     importe,
     fecha_compra,
     fecha_ingreso,
-    imagen
+    imagen,
+    doc
 
 }) => {
   try {
-    return await activosApi.put(`${BASE_URL}/${id}`, {
+    return await activosApi.put(`${BASE_URL}/${activo_id}`, {
         nombre,
         descripcion,
         fabricante_id,
@@ -180,7 +184,8 @@ export const update = async ({
         importe,
         fecha_compra,
         fecha_ingreso,
-        imagen
+        imagen,
+        doc
     });
   } catch (error) {
     throw error;

@@ -253,11 +253,11 @@ export const MiniDrawer = () => {
               className={classes.listItemHover}
             >
               <ListItemIcon>
-                <QuizIcon color="primary" />
+                <ListAltIcon color="primary" />
               </ListItemIcon>
               <ListItemText
                 color="primary"
-                primary="List Activos"
+                primary="Listado Activos"
                 primaryTypographyProps={{ style: { color: "#9AE6F0" } }} // Cambiar el color del texto
               />
             </ListItem>
@@ -329,7 +329,7 @@ export const MiniDrawer = () => {
             </ListItem>
             <ListItem component={NavLink} to="/Personal/Table">
               <ListItemIcon>
-                <ListAltIcon color="primary" />
+                <QuizIcon color="primary" />
               </ListItemIcon>
               <ListItemText
                 primary="Lista de Activos"

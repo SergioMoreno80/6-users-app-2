@@ -35,34 +35,7 @@ export const ActivosList = () => {
   const { activos } = useActivos();
   const { login } = useAuth();
   return (
-    // <table className="table table-hover table-striped">
-
-    //     <thead>
-    //         <tr>
-    //             <th>#</th>
-    //             <th>nombre</th>
-    //             <th>descripcion</th>
-    //             {!login.isAdmin || <>
-    //                 <th>update</th>
-    //                 <th>update route</th>
-    //                 <th>remove</th>
-    //             </>}
-    //         </tr>
-    //     </thead>
-    //     <tbody>
-    //         {
-    //             activos.map(({ activo_id, nombre, descripcion }) => (
-    //                 <ActivoRow
-    //                     key={activo_id}
-    //                     id={activo_id}
-    //                     nombre={nombre}
-    //                     descripcion={descripcion}
-    //                     //admin={admin}
-    //                 />
-    //             ))
-    //         }
-    //     </tbody>
-    // </table>
+    
     <TableContainer
       component={Paper}
       style={{
@@ -75,12 +48,12 @@ export const ActivosList = () => {
       <Table aria-label="collapsible table">
         <TableHead style={{ backgroundColor: "#000" }}>
           <TableRow>
-            <TableCell />
-            <TableCell style={{ color: "#fff", fontWeight: "bold" }}>
-              Imagen
+            <TableCell style={{ color: "#fff", fontWeight: "bold" }}
+             align="center">
+              IMG
             </TableCell>
             <TableCell style={{ color: "#fff", fontWeight: "bold" }}>
-              Nombre
+              NOMBRE
             </TableCell>
             <TableCell
               style={{ color: "#fff", fontWeight: "bold" }}
@@ -106,12 +79,25 @@ export const ActivosList = () => {
             >
               PROVEEDOR
             </TableCell>
+            {/* <TableCell
+              style={{ color: "#fff", fontWeight: "bold" }}
+              align="center"
+            >
+              EDITAR
+            </TableCell> */}
             <TableCell
               style={{ color: "#fff", fontWeight: "bold" }}
               align="center"
             >
-              ESTATUS
+              ELIMINAR
             </TableCell>
+            <TableCell
+              style={{ color: "#fff", fontWeight: "bold" }}
+              align="center"
+            >
+              PDF
+            </TableCell>
+
           </TableRow>
         </TableHead>
         <TableBody>
@@ -121,7 +107,7 @@ export const ActivosList = () => {
           ))} */}
           {
                 activos.map(({ //imagen, 
-                  activo_id, nombre, descripcion, factura, fecha_compra, no_serie, modelo, importe, proveedor_id, estatus, foto }) => (
+                  activo_id, nombre, descripcion, factura, fecha_compra, no_serie, modelo, importe, proveedor_id, estatus, foto, proveedor }) => (
                     <ActivoRow
                         key={activo_id}
                         id={activo_id}
@@ -136,6 +122,8 @@ export const ActivosList = () => {
                         proveedor_id={proveedor_id}
                         estatus={estatus}
                         foto={foto}
+                        proveedor={proveedor}
+
                     />
                 ))
             }

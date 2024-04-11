@@ -64,7 +64,7 @@ export const UserForm = ({ userSelected, handlerCloseForm }) => {
         setUserForm(initialUserForm);
     }
     return (
-        <form onSubmit={ onSubmit }>
+        <form onSubmit={ onSubmit } style={{ paddingLeft: '20px', paddingTop: '40px' }}>
             <input
                 className="form-control my-3 w-75"
                 placeholder="Username"
@@ -73,7 +73,7 @@ export const UserForm = ({ userSelected, handlerCloseForm }) => {
                 onChange={onInputChange} />
             <p className="text-danger">{ errors?.username}</p>
             
-            { id > 0 || <input
+            { admin || <input
                 className="form-control my-3 w-75"
                 placeholder="Password"
                 type="password"

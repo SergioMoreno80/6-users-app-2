@@ -2,7 +2,9 @@ import React, { useState, useEffect } from "react";
 import activosApi from "../apis/activosApi";
 import InputAdornment from "@mui/material/InputAdornment";
 import IconButton from "@mui/material/IconButton";
-import NoteAddIcon from '@mui/icons-material/NoteAdd';
+import NoteAddIcon from "@mui/icons-material/NoteAdd";
+import PlaylistAddCircleIcon from "@mui/icons-material/PlaylistAddCircle";
+
 import {
   TextField,
   Grid,
@@ -63,10 +65,11 @@ const VisuallyHiddenInput = styled("input")({
 });
 
 export const AssetRegister = ({ handlerCloseForm }) => {
+  const { initialActivoForm, handlerAddActivo, errors } = useActivos(); //inicializar forma
 
-  const { initialActivoForm, handlerAddActivo } = useActivos(); //inicializar forma
   const [activoForm, setActivoForm] = useState(initialActivoForm);
-  const { nombre,
+  const {
+    nombre,
     descripcion,
     fabricante_id,
     modelo,
@@ -80,11 +83,11 @@ export const AssetRegister = ({ handlerCloseForm }) => {
     importe,
     fecha_compra,
     fecha_ingreso,
-    imagen } = activoForm;
+    imagen,
+    doc,
+  } = activoForm;
 
-  const [proveedores, setProveedores] = useState([]);
-  const [gruposActivos, setGruposActivos] = useState([]);
-  const [fabricantes, setFabricantes] = useState([]);
+  
   ////ejemplo de carga de imagenes desde react y spring data
   const [alertaAbierta, setAlertaAbierta] = useState(false);
 
@@ -92,24 +95,24 @@ export const AssetRegister = ({ handlerCloseForm }) => {
   //const [importe, setMonto] = useState(""); // Inicializa el estado con un valor numérico
 
   const onInputChange = ({ target }) => {
-    console.log(target.value)
-    console.log(target.name)
+    console.log(target.value);
+    console.log(target.name);
     const { name, value } = target;
     setActivoForm({
-        ...activoForm,
-        [name]: value,
-    })
-}
-
-const handleFechaChange = (date, campo) => {
-  // Actualizar el estado con la nueva fecha
-  console.log(campo)
-  console.log(date)
-  setActivoForm({
-    ...activoForm,
-    [campo]: date,
-  });
-};
+      ...activoForm,
+      [name]: value,
+    });
+  };
+  
+  const handleFechaChange = (date, campo) => {
+    // Actualizar el estado con la nueva fecha
+    console.log(campo);
+    console.log(date);
+    setActivoForm({
+      ...activoForm,
+      [campo]: date,
+    });
+  };
   const handleAbrirAlerta = () => {
     setAlertaAbierta(true);
   };
@@ -124,11 +127,21 @@ const handleFechaChange = (date, campo) => {
   const manejarCambioImagen = (e) => {
     const archivoImagen = e.target.files[0];
     //setImagen(archivoImagen);
-    console.log(archivoImagen)
+    console.log(archivoImagen);
     setActivoForm({
       ...activoForm,
       imagen: archivoImagen,
     });
+  };
+
+  const manejarCambioDocumento = (e) => {
+    const archivo = e.target.files[0];
+    console.log(archivo)
+    setActivoForm({
+      ...activoForm,
+      doc: archivo,
+    });
+    console.log(activoForm);
 
   };
 
@@ -140,7 +153,7 @@ const handleFechaChange = (date, campo) => {
     const valorEntrada = e.target.value;
     // Convierte el valor a un número y maneja NaN si no es un número válido
     // Elimina caracteres no numéricos, excepto el punto decimal
-  const valorNumerico = parseFloat(valorEntrada.replace(/[^\d.]/g, '')) || 0;
+    const valorNumerico = parseFloat(valorEntrada.replace(/[^\d.]/g, "")) || 0;
 
     // Formatea el número como moneda en pesos mexicanos (MXN)
     const montoFormateado = new Intl.NumberFormat("es-MX", {
@@ -148,42 +161,43 @@ const handleFechaChange = (date, campo) => {
       currency: "MXN",
     }).format(valorNumerico);
 
-    console.log(importe)
+    console.log(importe);
     setActivoForm({
       ...activoForm,
       importe: valorNumerico,
     });
   };
   //load data
+  const obtenerGruposActivos = async () => {
+    try {
+      const respuesta = await activosApi.get(`${BASE_URL}/cargaGrupoActivo`);
+      const datos = respuesta.data;
+      setGruposActivos(datos);
+    } catch (error) {
+      console.error("Error al obtener datos de grupos de activos:", error);
+    }
+  };
+  const obtenerFabricantes = async () => {
+    try {
+      const respuesta = await activosApi.get(`${BASE_URL}/cargaFabricante`);
+      const datos = respuesta.data;
+      setFabricantes(datos);
+    } catch (error) {
+      console.error("Error al obtener datos de fabricantes:", error);
+    }
+  };
+  // Función para obtener datos de la API
+  const obtenerProveedores = async () => {
+    try {
+      const respuesta = await activosApi.get(`${BASE_URL}/cargaProveedor`);
+      const datos = await respuesta.data;
+      setProveedores(datos);
+    } catch (error) {
+      console.error("Error al obtener datos de proveedores:", error);
+    }
+  };
   useEffect(() => {
-    const obtenerGruposActivos = async () => {
-      try {
-        const respuesta = await activosApi.get(`${BASE_URL}/cargaGrupoActivo`);
-        const datos = respuesta.data;
-        setGruposActivos(datos);
-      } catch (error) {
-        console.error("Error al obtener datos de grupos de activos:", error);
-      }
-    };
-    const obtenerFabricantes = async () => {
-      try {
-        const respuesta = await activosApi.get(`${BASE_URL}/cargaFabricante`);
-        const datos = respuesta.data;
-        setFabricantes(datos);
-      } catch (error) {
-        console.error("Error al obtener datos de fabricantes:", error);
-      }
-    };
-    // Función para obtener datos de la API
-    const obtenerProveedores = async () => {
-      try {
-        const respuesta = await activosApi.get(`${BASE_URL}/cargaProveedor`);
-        const datos = await respuesta.data;
-        setProveedores(datos);
-      } catch (error) {
-        console.error("Error al obtener datos de proveedores:", error);
-      }
-    };
+    console.log("Información de cargas iniciales prov, fabricante, grupos ", activoForm);
 
     // Llamada a la función para obtener datos cuando el componente se monta
     obtenerProveedores();
@@ -191,19 +205,22 @@ const handleFechaChange = (date, campo) => {
     obtenerFabricantes();
   }, []);
 
+  const [proveedores, setProveedores] = useState([""]);
+  const [gruposActivos, setGruposActivos] = useState([""]);
+  const [fabricantes, setFabricantes] = useState([""]);
+
   const handleSubmit = async (event) => {
     event.preventDefault();
-  // Imprimir información de activoForm en la consola
-      console.log('Información de activoForm:', activoForm);
-      if (!fecha_compra || !fecha_ingreso) {
+    // Imprimir información de activoForm en la consola
+    console.log("Información de activoForm:", activoForm);
+    if (!fecha_compra || !fecha_ingreso) {
       setAlertaAbierta(true);
       //console.error("Por favor, completa todos los campos obligatorios.");
 
       return;
     }
 
-  
-      console.error("Por favor, enviando form");
+    console.error("Por favor, enviando form", activoForm);
     //return;
     handlerAddActivo(activoForm);
   };
@@ -240,9 +257,10 @@ const handleFechaChange = (date, campo) => {
                 label="Nombre"
                 name="nombre"
                 autoComplete="Nombre"
-                value={ nombre}
+                value={nombre}
                 autoFocus
-                onChange={onInputChange} />
+                onChange={onInputChange}
+              />
             </Grid>
             <Grid item xs={6}>
               <TextField
@@ -252,9 +270,9 @@ const handleFechaChange = (date, campo) => {
                 label="Descripcion"
                 name="descripcion"
                 autoComplete="Descripcion"
-                value={ descripcion}
-                onChange={onInputChange} />
-
+                value={descripcion}
+                onChange={onInputChange}
+              />
             </Grid>
 
             <Grid item xs={4}>
@@ -265,12 +283,12 @@ const handleFechaChange = (date, campo) => {
                   onChange={onInputChange}
                   name="fabricante_id"
                 >
-                  {fabricantes.map((option) => (
+                  {fabricantes.map((o) => (
                     <MenuItem
-                      key={option.fabricante_id}
-                      value={option.fabricante_id}
+                      key={o.fabricante_id}
+                      value={o.fabricante_id}
                     >
-                      {option.nombre}
+                      {o.nombre}
                     </MenuItem>
                   ))}
                 </Select>
@@ -285,9 +303,9 @@ const handleFechaChange = (date, campo) => {
                 label="Modelo"
                 name="modelo"
                 autoComplete="modelo"
-                value={ modelo}
-                onChange={onInputChange} />
-
+                value={modelo}
+                onChange={onInputChange}
+              />
             </Grid>
             <Grid item xs={4}>
               <TextField
@@ -297,18 +315,14 @@ const handleFechaChange = (date, campo) => {
                 fullWidth
                 id="no_serie"
                 label="No. de Serie"
-                value={ no_serie}
-                onChange={onInputChange} />
-
+                value={no_serie}
+                onChange={onInputChange}
+              />
             </Grid>
             <Grid item xs={12} sm={4}>
               <FormControl fullWidth required>
                 <InputLabel>Clasificacion</InputLabel>
-                <Select
-                  value={tipo}
-                  onChange={onInputChange}
-                  name="tipo"
-                >
+                <Select value={tipo} onChange={onInputChange} name="tipo">
                   {clasificacion.map((option) => (
                     <MenuItem key={option.value} value={option.value}>
                       {option.name}
@@ -320,16 +334,11 @@ const handleFechaChange = (date, campo) => {
             <Grid item xs={12} sm={4}>
               <FormControl fullWidth required>
                 <InputLabel>Estatus</InputLabel>
-                <Select
-                  value={estatus}
-                  onChange={onInputChange}
-                  name="estatus"
-                >
+                <Select value={estatus} onChange={onInputChange} name="estatus">
                   {estatusVal.map((option) => (
                     <MenuItem key={option.value} value={option.value}>
                       {option.name}
                     </MenuItem>
-                    
                   ))}
                 </Select>
               </FormControl>
@@ -337,16 +346,17 @@ const handleFechaChange = (date, campo) => {
             <Grid item xs={4}>
               <FormControl fullWidth required>
                 <InputLabel>Grupo de Activo</InputLabel>
-                <Select value={grupoactivo_id} 
-                onChange={onInputChange}
+                <Select
+                  value={grupoactivo_id}
+                  onChange={onInputChange}
                   name="grupoactivo_id"
-                  >
-                  {gruposActivos.map((gruposActivos) => (
+                >
+                  {gruposActivos.map((option) => (
                     <MenuItem
-                      key={gruposActivos.grupoactivo_id}
-                      value={gruposActivos.grupoactivo_id}
+                      key={option.grupoactivo_id}
+                      value={option.grupoactivo_id}
                     >
-                      {gruposActivos.nombre}
+                      {option.nombre}
                     </MenuItem>
                   ))}
                 </Select>
@@ -360,12 +370,12 @@ const handleFechaChange = (date, campo) => {
                   onChange={onInputChange}
                   name="proveedor_id"
                 >
-                  {proveedores.map((proveedor) => (
+                  {proveedores.map((option) => (
                     <MenuItem
-                      key={proveedor.proveedor_id}
-                      value={proveedor.proveedor_id}
+                      key={option.proveedor_id}
+                      value={option.proveedor_id}
                     >
-                      {proveedor.nombre}
+                      {option.nombre}
                     </MenuItem>
                   ))}
                 </Select>
@@ -379,9 +389,9 @@ const handleFechaChange = (date, campo) => {
                 label="Factura"
                 name="factura"
                 autoComplete="factura"
-                value={ factura}
-                onChange={onInputChange} />
-
+                value={factura}
+                onChange={onInputChange}
+              />
             </Grid>
 
             <Grid item xs={4} md={4}>
@@ -409,25 +419,45 @@ const handleFechaChange = (date, campo) => {
                   label="Fecha de Compra"
                   id="fechaCompra"
                   value={fecha_compra}
-                  onChange={(date) => handleFechaChange(date, 'fecha_compra')}
+                  onChange={(date) => handleFechaChange(date, "fecha_compra")}
                   //onChange={(date) => setFechaCompra(date)}
                   //renderInput={(params) => <TextField {...params} required />}
-                  slotProps={{ textField: { variant: 'outlined' } }}
+                  slotProps={{ textField: { variant: "outlined" } }}
                 />
               </LocalizationProvider>
             </Grid>
-            <Grid item xs={4}>
+
+            {/* <Grid item xs={4}>
               <LocalizationProvider dateAdapter={AdapterDayjs}>
                 <DatePicker
                   label="Fecha de Inicio de Uso"
                   id="fechaInicioUso"
                   value={fecha_ingreso}
-                  onChange={(date) => handleFechaChange(date, 'fecha_ingreso')}
-                  //renderInput={(params) => <TextField {...params} required />}
-                  slotProps={{ textField: { variant: 'outlined' } }}
+                  onChange={(date) => handleFechaChange(date, "fecha_ingreso")}
+                  slotProps={{ textField: { variant: "outlined" } }}
                 />
               </LocalizationProvider>
+            </Grid> */}
+            <Grid item xs={4}>
+              {" "}
+              <LocalizationProvider dateAdapter={AdapterDayjs}>
+                {" "}
+                <DatePicker
+                  label="Fecha de Inicio de Uso"
+                  id="fechaInicioUso"
+                  value={fecha_ingreso}
+                  onChange={(date) => handleFechaChange(date, "fecha_ingreso")}
+                  inputVariant="outlined"
+                  clearable
+                  clearLabel="Limpiar fecha"
+                  okLabel="Aceptar"
+                  cancelLabel="Cancelar"
+                  todayLabel="Hoy"
+                  slotProps={{ textField: { variant: "outlined" } }}
+                />{" "}
+              </LocalizationProvider>{" "}
             </Grid>
+
             <Grid item xs={12} sm={4}>
               <TextField
                 required
@@ -436,17 +466,18 @@ const handleFechaChange = (date, campo) => {
                 label="Alias o clave de busqueda"
                 name="clave_busqueda"
                 autoComplete="clave_busqueda"
-                value={ clave_busqueda}
-                onChange={onInputChange} />
-
+                value={clave_busqueda}
+                onChange={onInputChange}
+              />
             </Grid>
-            <input type="hidden"
-                name="estatus"
-                value={estatus} 
-                onChange={(e) => setEstatus(e.target.value)}
-                />
+            <input
+              type="hidden"
+              name="estatus"
+              value={estatus}
+              onChange={(e) => setEstatus(e.target.value)}
+            />
 
-            <Grid item xs={4}>
+            <Grid item xs={4} md={4}>
               <Button
                 component="label"
                 variant="contained"
@@ -467,6 +498,29 @@ const handleFechaChange = (date, campo) => {
                 onClose={handleCerrarAlerta}
                 message="Fecha de compra e inicio de uso es requerida."
               ></Snackbar>
+            </Grid>
+            <Grid item xs={4} md={4}  >
+              <Button
+                component="label"
+                variant="contained"
+                color="primary"
+                sx={{
+                  marginTop: 0,
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                  width: "100%", // Ajusta el ancho del Box al 100% de la columna
+                }}
+                startIcon={<PlaylistAddCircleIcon />}
+              >
+                CARGAR DOCUMENTO
+                <VisuallyHiddenInput
+                  type="file"
+                  accept=".doc,.docx,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,.pdf,application/pdf"
+                  onChange={manejarCambioDocumento}
+                />
+              </Button>
+   
             </Grid>
             <Grid item xs={6}>
               <Button type="submit" variant="contained" color="primary">

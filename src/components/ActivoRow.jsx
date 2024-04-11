@@ -10,6 +10,12 @@ import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
 import React, { useState } from "react";
 import { format } from "date-fns";
+import Fab from "@mui/material/Fab";
+import EditRoundedIcon from "@mui/icons-material/EditRounded";
+import RemoveIcon from "@mui/icons-material/Remove";
+import jsPDF from "jspdf";
+import autoTable from "jspdf-autotable";
+import PictureAsPdfIcon from "@mui/icons-material/PictureAsPdf";
 
 import {
   Table,
@@ -25,7 +31,7 @@ import pc from "../images/pc escritorio.webp"; // Ajusta la ruta a tu imagen de 
 
 export const ActivoRow = ({
   imagen,
-  activo_id,
+  id,
   nombre,
   descripcion,
   factura,
@@ -36,6 +42,7 @@ export const ActivoRow = ({
   proveedor_id,
   estatus,
   foto,
+  proveedor,
 }) => {
   const { handlerActivoSelectedForm, handlerRemoveActivo } = useActivos();
   const { login } = useAuth();
@@ -45,6 +52,32 @@ export const ActivoRow = ({
     currency: "MXN", // Puedes ajustar la moneda según tus necesidades
     minimumFractionDigits: 2,
   }).format(importe);
+
+  const handleGeneratePDF = () => {
+    // Renderizar el contenido de la fila en un lienzo HTML
+    console.log("crea PDF");
+    //testing code fr error at line 57
+
+    const pdf = new jsPDF();
+    pdf.text("Activos", 70, 20);
+
+    const columnas = [
+      "ID",
+
+      "FECHA_COMPRA",
+      "DESCRIPCION",
+      "PROVEEDOR",
+      "FACTURA",
+    ];
+
+    const datos = [
+      [id, formattedDate, descripcion, proveedor, factura],
+      // Agrega más filas aquí si es necesario
+    ];
+
+    pdf.autoTable({ startY: 30, columns: columnas, body: datos });
+    pdf.save("activos_".concat(id).concat(".pdf"));
+  };
 
   // Convertir la cadena a un objeto Date
   const dateObject = new Date(fecha_compra);
@@ -56,7 +89,7 @@ export const ActivoRow = ({
   return (
     <React.Fragment>
       <TableRow sx={{ "& > *": { borderBottom: "unset" } }}>
-        <TableCell>
+        {/* <TableCell>
           <IconButton
             aria-label="expand row"
             size="small"
@@ -64,9 +97,13 @@ export const ActivoRow = ({
           >
             {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
           </IconButton>
-        </TableCell>
+        </TableCell> */}
         <TableCell>
-          <img src={`http://localhost:8080/imagenes/${foto}`} alt={foto} style={{ width: "50px" }} />
+          <img
+            src={`http://localhost:8080/imagenes/${foto}`}
+            alt={foto}
+            style={{ width: "50px" }}
+          />
         </TableCell>
         <TableCell component="th" scope="row" align="left">
           {nombre}
@@ -75,103 +112,32 @@ export const ActivoRow = ({
         <TableCell align="center">{factura}</TableCell>
         <TableCell align="center">{formattedDate}</TableCell>
         <TableCell align="center">{formattedCurrency}</TableCell>
-        <TableCell align="center">{proveedor_id}</TableCell>
-
+        <TableCell align="center">{proveedor}</TableCell>
+        {/* <TableCell align="center">
+          <NavLink
+            to={'/Assets/edit/' + id} >
+            <Fab >
+              <EditRoundedIcon />
+            </Fab>
+          </NavLink>
+        </TableCell> */}
         <TableCell align="center">
-          <Button
-            variant="contained"
-            color={estatus === "A" ? "success" : "error"}
-            onClick={() => changeStatus(id)}
+          <Fab
+            color="error"
+            aria-label="add"
+            onClick={() => handlerRemoveActivo(id)}
           >
-            {estatus === "A" ? "ACTIVO" : "INACTIVO"}
-          </Button>
+            <RemoveIcon />
+          </Fab>
         </TableCell>
-      </TableRow>
-      <TableRow>
-        <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
-          <Collapse in={open} timeout="auto" unmountOnExit>
-            <Box sx={{ margin: 1 }}>
-              <Typography variant="h6" gutterBottom component="div">
-                History
-              </Typography>
-              <Table size="small" aria-label="purchases">
-                <TableHead>
-                  <TableRow>
-                    <TableCell>Fecha del movimiento</TableCell>
-                    <TableCell>Asignado a</TableCell>
-                    <TableCell align="right">Ubicacion</TableCell>
-                    <TableCell align="right">Departamento </TableCell>
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  {/* {row.history.map((historyRow) => (
-                    <TableRow key={historyRow.date}>
-                      <TableCell component="th" scope="row">
-                        {historyRow.date}
-                      </TableCell>
-                      <TableCell>{historyRow.customerId}</TableCell>
-                      <TableCell align="right">{historyRow.amount}</TableCell>
-                      <TableCell align="right">{historyRow.departamento}</TableCell>
-            
-                    </TableRow>
-                  ))} */}
-                </TableBody>
-              </Table>
-            </Box>
-          </Collapse>
+        <TableCell align="center">
+          <Fab color="primary" aria-label="add" onClick={handleGeneratePDF}>
+            <PictureAsPdfIcon />
+          </Fab>
         </TableCell>
       </TableRow>
     </React.Fragment>
 
-    // <TableCell component="th" scope="row" align="left">
-    //   {nombre}
-    // </TableCell>
-
-    // <TableCell align="center">{descripcion}</TableCell>
-    // <TableCell align="center">{fecha_compra}</TableCell>
-    // <TableCell align="center">{factura}</TableCell>
-    // <tr>
-    //     <td>{id}</td>
-    //     <td>{nombre}</td>
-    //     <td>{descripcion}</td>
-    //     <td>{factura}</td>
-    //     <td>{fecha_compra}</td>
-    //     <td>{no_serie}</td>
-    //     <td>{modelo}</td>
-
-    //     {!login.isAdmin ||
-    //         <>
-    //             <td>
-    //                 <button
-    //                     type="button"
-    //                     className="btn btn-secondary btn-sm"
-    //                     onClick={() => handlerActivoSelectedForm({
-    //                         id,
-    //                         nombre,
-    //                         descripcion
-
-    //                     })}
-    //                 >
-    //                     Editar
-    //                 </button>
-    //             </td>
-    //             <td>
-    //                 <NavLink className={'btn btn-secondary btn-sm'}
-    //                     to={'/users/edit/' + id} >
-    //                     update route
-    //                 </NavLink>
-    //             </td>
-    //             <td>
-    //                 <button
-    //                     type="button"
-    //                     className="btn btn-danger btn-sm"
-    //                     onClick={() => handlerRemoveActivo(id)}
-    //                 >
-    //                     Eliminar
-    //                 </button>
-    //             </td>
-    //         </>
-    //     }
-    // </tr>
+   
   );
 };

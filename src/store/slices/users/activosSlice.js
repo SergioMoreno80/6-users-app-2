@@ -1,7 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 export const initialActivoForm = {
-  id: 0,
+  activo_id: 0,
   nombre: "",
   descripcion: "",
   fabricante_id: "",
@@ -20,6 +20,9 @@ export const initialActivoForm = {
   clave_busqueda: "",
   imagen: "",
   foto: "",
+  doc: "",
+  documento: "",
+  proveedor: "",
 };
 const initialErrors = {
   nombre: "",
@@ -40,6 +43,9 @@ const initialErrors = {
   clave_busqueda: "",
   imagen: "",
   foto: "",
+  doc: "",
+  documento: "",
+  proveedor: "",
   admin: false,
 };
 export const activosSlice = createSlice({
@@ -66,7 +72,7 @@ export const activosSlice = createSlice({
     },
     removeActivo: (state, action) => {
       state.activos = state.activos.filter(
-        (activo) => activo.id !== action.payload
+        (activo) => activo.activo_id !== action.payload
       );
     },
     updateActivo: (state, action) => {

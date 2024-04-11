@@ -60,43 +60,43 @@ const currencies = [
   },
 ];
 
-const grupos = [
-  {
-    value: "MO",
-    label: "Mobiiario",
-  },
-  {
-    value: "MA",
-    label: "Maquinaria",
-  },
-  {
-    value: "T",
-    label: "Transporte",
-  },
-  {
-    value: "OF",
-    label: "Equipo de oficina",
-  },
-];
+// const grupos = [
+//   {
+//     value: "MO",
+//     label: "Mobiiario",
+//   },
+//   {
+//     value: "MA",
+//     label: "Maquinaria",
+//   },
+//   {
+//     value: "T",
+//     label: "Transporte",
+//   },
+//   {
+//     value: "OF",
+//     label: "Equipo de oficina",
+//   },
+// ];
 
-const proveedor = [
-  {
-    value: "p1",
-    label: "Chevrolet Tamaulipas",
-  },
-  {
-    value: "p2",
-    label: "Nissan Mexico",
-  },
-  {
-    value: "p3",
-    label: "Toyota Monterrey",
-  },
-  {
-    value: "p4",
-    label: "Volswagen Tampico",
-  },
-];
+// const proveedor = [
+//   {
+//     value: "p1",
+//     label: "Chevrolet Tamaulipas",
+//   },
+//   {
+//     value: "p2",
+//     label: "Nissan Mexico",
+//   },
+//   {
+//     value: "p3",
+//     label: "Toyota Monterrey",
+//   },
+//   {
+//     value: "p4",
+//     label: "Volswagen Tampico",
+//   },
+// ];
 
 // TODO remove, this demo shouldn't need to reset the theme.
 

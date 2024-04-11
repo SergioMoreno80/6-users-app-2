@@ -30,6 +30,8 @@ export const useActivos = () => {
   const getActivos = async (page = 0) => {
     try {
       const result = await findAllPages(page);
+      console.log("login activos:",result);
+
       dispatch(loadingActivos(result.data));
     } catch (error) {
       if (error.response?.status == 401) {
@@ -51,11 +53,10 @@ export const useActivos = () => {
   };
 
   const handlerAddActivo = async (activo) => {
-    // console.log(activo);
     if (!login.isAdmin) return;
     let response;
     try {
-      if (activo.id === 0) {
+      if (activo.activo_id === 0) {
         response = await save(activo);
         dispatch(addActivo(response.data));
       } else {
@@ -91,8 +92,8 @@ export const useActivos = () => {
     }
   };
 
-  const handlerRemoveActivo = (id) => {
-    // console.log(id);
+  const handlerRemoveActivo = (activo_id) => {
+     console.log("id remove",activo_id);
 
     if (!login.isAdmin) return;
 
@@ -107,9 +108,9 @@ export const useActivos = () => {
     }).then(async (result) => {
       if (result.isConfirmed) {
         try {
-          await remove(id);
+          await remove(activo_id);
 
-          dispatch(removeActivo(id));
+          dispatch(removeActivo(activo_id));
 
           Swal.fire(
             "Activo Eliminado!",

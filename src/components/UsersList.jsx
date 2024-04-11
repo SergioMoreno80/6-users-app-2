@@ -23,13 +23,14 @@ export const UsersList = () => {
             </thead>
             <tbody>
                 {
-                    users.map(({ id, username, email, admin }) => (
+                    users.map(({ id, username, email, admin, password }) => (
                         <UserRow
                             key={id}
                             id={id}
                             username={username}
                             email={email}
                             admin={admin}
+                            password={password}
                         />
                     ))
                 }

@@ -2,7 +2,7 @@ import { NavLink } from "react-router-dom"
 import { useUsers } from "../hooks/useUsers";
 import { useAuth } from "../auth/hooks/useAuth";
 
-export const UserRow = ({ id, username, email, admin }) => {
+export const UserRow = ({ id, username, email, admin, password }) => {
     const { handlerUserSelectedForm, handlerRemoveUser } = useUsers();
     const { login } = useAuth();
     return (
@@ -21,7 +21,7 @@ export const UserRow = ({ id, username, email, admin }) => {
                                 id,
                                 username,
                                 email,
-                                admin
+                                admin, password
                             })}
                         >
                             Editar

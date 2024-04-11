@@ -74,7 +74,7 @@ export const useUsers = () => {
     }
 
     const handlerRemoveUser = (id) => {
-        // console.log(id);
+         console.log(id);
 
         if (!login.isAdmin) return;
 

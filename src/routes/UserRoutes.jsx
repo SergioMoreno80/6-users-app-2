@@ -20,6 +20,8 @@ import { MaintenanceAsset } from "../pages/MaintenanceAsset";
 import { AssetOut } from "../pages/AssetOut";
 //import { FormularioEjemplo } from "../pages/FormularioEjemplo";
 import { AssetRegister } from "../pages/AssetRegister";
+import { AssetReg } from "../pages/AssetReg";
+
 
 export const UserRoutes = () => {
   const { isAdmin } = useSelector((state) => state.auth);
@@ -47,10 +49,14 @@ export const UserRoutes = () => {
         <Route path="activos/page/:page" element={<ActivosPage />} />
         <Route path="movimientos/page/:page" element={<MovimientosPage />} />
         {/* <Route path="AssetDash/Dashboard/:page" element={<DashAsset />} /> */}
+
         {!isAdmin || (
           <>
             <Route path="users/register" element={<RegisterPage />} />
             <Route path="users/edit/:id" element={<RegisterPage />} />
+            <Route path="Assets/edit/:id" element={<AssetReg />} />
+
+
           </>
         )}
         <Route path="/" element={<Navigate to="/AssetPage/register" />} />
