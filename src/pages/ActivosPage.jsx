@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { UserModalForm } from "../components/UserModalForm";
 import { ActivosList } from "../components/ActivosList";
+import React, { useState } from "react";
 import { useActivos } from "../hooks/useActivos";
 import { useAuth } from "../auth/hooks/useAuth";
 import { useParams } from "react-router-dom";
@@ -15,13 +16,19 @@ export const ActivosPage = () => {
     paginator,
     handlerOpenForm,
     getActivos,
-  } = useActivos();
-
+    getList,
+    activoSelected,
+  } = useActivos(); 
   const { login } = useAuth();
 
+
+  // useEffect(() => {
+  //   getActivos(page);
+  // }, [, page]);
   useEffect(() => {
-    getActivos(page);
-  }, [, page]);
+    // Elimina 'page' de los parámetros de la función getActivos
+    getList();
+  }, []);
 
   if (isLoading) {
     return (
@@ -38,10 +45,8 @@ export const ActivosPage = () => {
       {!visibleForm || <UserModalForm />}
       <div className="container my-4 text-center">
         <h2>Listado de activos</h2>
-
         <div className="row">
-        <div className="col">
-            
+          <div className="col">
             {/* {visibleForm || !login.isAdmin || (
               <button
                 className="btn btn-primary my-2"
@@ -58,9 +63,8 @@ export const ActivosPage = () => {
             ) : (
               <>
                 <ActivosList />
-                  <PaginatorA url="/activos/page" paginator={paginator}
-                  />
-               
+                {/* <PaginatorA url="/activos/page" paginator={paginator}
+                  /> */}
               </>
             )}
           </div>

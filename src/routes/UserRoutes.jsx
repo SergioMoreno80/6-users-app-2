@@ -21,7 +21,7 @@ import { AssetOut } from "../pages/AssetOut";
 //import { FormularioEjemplo } from "../pages/FormularioEjemplo";
 import { AssetRegister } from "../pages/AssetRegister";
 import { AssetReg } from "../pages/AssetReg";
-
+import { Kardex } from "../pages/kardex";
 
 export const UserRoutes = () => {
   const { isAdmin } = useSelector((state) => state.auth);
@@ -55,6 +55,8 @@ export const UserRoutes = () => {
             <Route path="users/register" element={<RegisterPage />} />
             <Route path="users/edit/:id" element={<RegisterPage />} />
             <Route path="Assets/edit/:id" element={<AssetReg />} />
+            <Route path="Assets/kardex/:id" element={<Kardex />} />
+
 
 
           </>

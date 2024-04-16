@@ -43,7 +43,7 @@ export const useActivos = () => {
   const getList = async () => {
     try {
       const result = await findAll();
-      // console.log('Lista de activos desde hook - :', result.data); // Agregar este console.log
+      console.log("Lista de activos desde hook - :", result.data); // Agregar este console.log
       dispatch(loadingData(result.data));
     } catch (error) {
       if (error.response?.status == 401) {

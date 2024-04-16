@@ -31,7 +31,7 @@ import pc from "../images/pc escritorio.webp"; // Ajusta la ruta a tu imagen de 
 
 export const ActivoRow = ({
   imagen,
-  id,
+  activo_id,
   nombre,
   descripcion,
   factura,
@@ -71,7 +71,7 @@ export const ActivoRow = ({
     ];
 
     const datos = [
-      [id, formattedDate, descripcion, proveedor, factura],
+      [activo_id, formattedDate, descripcion, proveedor, factura],
       // Agrega más filas aquí si es necesario
     ];
 
@@ -99,12 +99,20 @@ export const ActivoRow = ({
           </IconButton>
         </TableCell> */}
         <TableCell>
-          <img
+          {/* <img
             src={`http://localhost:8080/imagenes/${foto}`}
             alt={foto}
             style={{ width: "50px" }}
-          />
+          /> */}
+          <NavLink to={`/Assets/kardex/${activo_id}`}>
+            <img
+              src={`http://localhost:8080/imagenes/${foto}`}
+              alt={foto}
+              style={{ width: "50px" }}
+            />
+          </NavLink>
         </TableCell>
+
         <TableCell component="th" scope="row" align="left">
           {nombre}
         </TableCell>
@@ -114,9 +122,8 @@ export const ActivoRow = ({
         <TableCell align="center">{formattedCurrency}</TableCell>
         <TableCell align="center">{proveedor}</TableCell>
         {/* <TableCell align="center">
-          <NavLink
-            to={'/Assets/edit/' + id} >
-            <Fab >
+          <NavLink to={"/Assets/edit/" + id}>
+            <Fab>
               <EditRoundedIcon />
             </Fab>
           </NavLink>
@@ -137,7 +144,5 @@ export const ActivoRow = ({
         </TableCell>
       </TableRow>
     </React.Fragment>
-
-   
   );
 };
