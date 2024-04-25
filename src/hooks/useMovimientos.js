@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
-import { findAllPages, remove, save, update, saveDetalles  } from "../services/movimientoService";
+import { findAll,findAllPages, remove, save, update, saveDetalles  } from "../services/movimientoService";
 
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -9,6 +9,7 @@ import {
   addMovimiento,
   removeMovimiento,
   updateMovimiento,
+  loadingMov,
   loadingData,
   onMovimientoSelectedForm,
   onDetalleSelectedForm,
@@ -33,11 +34,24 @@ export const useMovimientos = () => {
       const result = await findAllPages(page);
       console.log("response data movimientos: ", result);
 
-      dispatch(loadingData(result.data));
+      dispatch(loadingMov(result.data));
     } catch (error) {
       if (error.response?.status == 401) {
         handlerLogout();
       }
+    }
+  };
+
+  //listado de movimientos para busqueda inteligente.
+  const getListMov = async () => {
+    try {
+      const result = await findAll();
+      console.log("Lista de movimientos desde hook - :", result.data); // Agregar este console.log
+      dispatch(loadingData(result.data));
+    } catch (error) {
+      if (error.response?.status == 401) {
+        handlerLogout();
+    }
     }
   };
 
@@ -161,5 +175,6 @@ export const useMovimientos = () => {
     handlerOpenForm,
     handlerCloseForm,
     getMovimientos,
+    getListMov,
   };
 };

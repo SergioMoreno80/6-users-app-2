@@ -4,7 +4,9 @@ import InputAdornment from "@mui/material/InputAdornment";
 import IconButton from "@mui/material/IconButton";
 import NoteAddIcon from "@mui/icons-material/NoteAdd";
 import PlaylistAddCircleIcon from "@mui/icons-material/PlaylistAddCircle";
-
+import PropTypes from "prop-types";
+import { NumericFormat } from "react-number-format";
+import SaveSharpIcon from "@mui/icons-material/SaveSharp";
 import {
   TextField,
   Grid,
@@ -31,16 +33,16 @@ import { useActivos } from "../hooks/useActivos";
 dayjs.locale("es");
 
 const BASE_URL = "";
-const clasificacion = [
-  {
-    value: "P",
-    name: "PROPIO",
-  },
-  {
-    value: "C",
-    name: "CONSIGNACION",
-  },
-];
+// const clasificacion = [
+//   {
+//     value: "P",
+//     name: "PROPIO",
+//   },
+//   {
+//     value: "C",
+//     name: "CONSIGNACION",
+//   },
+// ];
 const estatusVal = [
   {
     value: "A",
@@ -63,7 +65,35 @@ const VisuallyHiddenInput = styled("input")({
   whiteSpace: "nowrap",
   width: 1,
 });
+const NumericFormatCustom = React.forwardRef(function NumericFormatCustom(
+  props,
+  ref
+) {
+  const { onChange, ...other } = props;
 
+  return (
+    <NumericFormat
+      {...other}
+      getInputRef={ref}
+      onValueChange={(values) => {
+        onChange({
+          target: {
+            name: props.name,
+            value: values.value,
+          },
+        });
+      }}
+      thousandSeparator
+      valueIsNumericString
+      prefix="$"
+    />
+  );
+});
+
+NumericFormatCustom.propTypes = {
+  name: PropTypes.string.isRequired,
+  onChange: PropTypes.func.isRequired,
+};
 export const AssetRegister = ({ handlerCloseForm }) => {
   const { initialActivoForm, handlerAddActivo, errors } = useActivos(); //inicializar forma
 
@@ -74,7 +104,7 @@ export const AssetRegister = ({ handlerCloseForm }) => {
     fabricante_id,
     modelo,
     no_serie,
-    tipo,
+    clasificacion,
     grupoactivo_id,
     proveedor_id,
     factura,
@@ -87,7 +117,6 @@ export const AssetRegister = ({ handlerCloseForm }) => {
     doc,
   } = activoForm;
 
-  
   ////ejemplo de carga de imagenes desde react y spring data
   const [alertaAbierta, setAlertaAbierta] = useState(false);
 
@@ -103,7 +132,7 @@ export const AssetRegister = ({ handlerCloseForm }) => {
       [name]: value,
     });
   };
-  
+
   const handleFechaChange = (date, campo) => {
     // Actualizar el estado con la nueva fecha
     console.log(campo);
@@ -136,13 +165,12 @@ export const AssetRegister = ({ handlerCloseForm }) => {
 
   const manejarCambioDocumento = (e) => {
     const archivo = e.target.files[0];
-    console.log(archivo)
+    console.log(archivo);
     setActivoForm({
       ...activoForm,
       doc: archivo,
     });
     console.log(activoForm);
-
   };
 
   useEffect(() => {
@@ -197,13 +225,17 @@ export const AssetRegister = ({ handlerCloseForm }) => {
     }
   };
   useEffect(() => {
-    console.log("Información de cargas iniciales prov, fabricante, grupos ", activoForm);
+    console.log(
+      "Información de cargas iniciales prov, fabricante, grupos ",
+      activoForm
+    );
 
     // Llamada a la función para obtener datos cuando el componente se monta
     obtenerProveedores();
     obtenerGruposActivos();
     obtenerFabricantes();
   }, []);
+  const Clasificaciones = ["PROPIOS", "ARRENDADOS"];
 
   const [proveedores, setProveedores] = useState([""]);
   const [gruposActivos, setGruposActivos] = useState([""]);
@@ -230,6 +262,17 @@ export const AssetRegister = ({ handlerCloseForm }) => {
     setActivoForm(initialActivoForm);
   };
 
+  const [values, setValues] = React.useState({
+    textmask: "(100) 000-0000",
+    numberformat: "1320",
+  });
+  const handleChange = (event) => {
+    setValues({
+      ...values,
+      [event.target.name]: event.target.value,
+    });
+  };
+
   return (
     <Box
       sx={{
@@ -249,7 +292,7 @@ export const AssetRegister = ({ handlerCloseForm }) => {
         </Box>
         <form onSubmit={handleSubmit}>
           <Grid container spacing={2} marginTop={2}>
-            <Grid item xs={6}>
+            <Grid item xs={12}>
               <TextField
                 required
                 fullWidth
@@ -262,13 +305,15 @@ export const AssetRegister = ({ handlerCloseForm }) => {
                 onChange={onInputChange}
               />
             </Grid>
-            <Grid item xs={6}>
+            <Grid item xs={12}>
               <TextField
                 required
                 fullWidth
-                id="descripcion"
-                label="Descripcion"
+                id="outlined-multiline-static"
+                label="Descripcion/Observaciones"
                 name="descripcion"
+                multiline
+                maxRows={3}
                 autoComplete="Descripcion"
                 value={descripcion}
                 onChange={onInputChange}
@@ -277,17 +322,14 @@ export const AssetRegister = ({ handlerCloseForm }) => {
 
             <Grid item xs={4}>
               <FormControl fullWidth required>
-                <InputLabel>Fabricante</InputLabel>
+                <InputLabel>Fabricante/Marca</InputLabel>
                 <Select
                   value={fabricante_id}
                   onChange={onInputChange}
                   name="fabricante_id"
                 >
                   {fabricantes.map((o) => (
-                    <MenuItem
-                      key={o.fabricante_id}
-                      value={o.fabricante_id}
-                    >
+                    <MenuItem key={o.fabricante_id} value={o.fabricante_id}>
                       {o.nombre}
                     </MenuItem>
                   ))}
@@ -319,49 +361,6 @@ export const AssetRegister = ({ handlerCloseForm }) => {
                 onChange={onInputChange}
               />
             </Grid>
-            <Grid item xs={12} sm={4}>
-              <FormControl fullWidth required>
-                <InputLabel>Clasificacion</InputLabel>
-                <Select value={tipo} onChange={onInputChange} name="tipo">
-                  {clasificacion.map((option) => (
-                    <MenuItem key={option.value} value={option.value}>
-                      {option.name}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
-            </Grid>
-            <Grid item xs={12} sm={4}>
-              <FormControl fullWidth required>
-                <InputLabel>Estatus</InputLabel>
-                <Select value={estatus} onChange={onInputChange} name="estatus">
-                  {estatusVal.map((option) => (
-                    <MenuItem key={option.value} value={option.value}>
-                      {option.name}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
-            </Grid>
-            <Grid item xs={4}>
-              <FormControl fullWidth required>
-                <InputLabel>Grupo de Activo</InputLabel>
-                <Select
-                  value={grupoactivo_id}
-                  onChange={onInputChange}
-                  name="grupoactivo_id"
-                >
-                  {gruposActivos.map((option) => (
-                    <MenuItem
-                      key={option.grupoactivo_id}
-                      value={option.grupoactivo_id}
-                    >
-                      {option.nombre}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
-            </Grid>
             <Grid item xs={4}>
               <FormControl fullWidth required>
                 <InputLabel>Proveedor</InputLabel>
@@ -382,6 +381,73 @@ export const AssetRegister = ({ handlerCloseForm }) => {
               </FormControl>
             </Grid>
             <Grid item xs={12} sm={4}>
+              <FormControl fullWidth required>
+                <InputLabel>Clasificacion</InputLabel>
+                {/* <Select value={clasificacion} onChange={onInputChange} name="clasificacion">
+                  {clasificacion.map((option) => (
+                    <MenuItem key={option.value} value={option.value}>
+                      {option.name}
+                    </MenuItem>
+                  ))}
+                </Select> */}
+                <Select
+                  value={clasificacion}
+                  onChange={onInputChange}
+                  name="clasificacion"
+                  required
+                >
+                  {Clasificaciones.map((tipo) => (
+                    <MenuItem key={tipo} value={tipo}>
+                      {tipo}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            </Grid>
+            {/* <Grid item xs={12} sm={4}>
+              <FormControl fullWidth required>
+                <InputLabel>Estatus</InputLabel>
+                <Select value={estatus} onChange={onInputChange} name="estatus">
+                  {estatusVal.map((option) => (
+                    <MenuItem key={option.value} value={option.value}>
+                      {option.name}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            </Grid> */}
+            <Grid item xs={4}>
+              <FormControl fullWidth required>
+                <InputLabel>Grupo de Activo</InputLabel>
+                <Select
+                  value={grupoactivo_id}
+                  onChange={onInputChange}
+                  name="grupoactivo_id"
+                >
+                  {gruposActivos.map((option) => (
+                    <MenuItem
+                      key={option.grupoactivo_id}
+                      value={option.grupoactivo_id}
+                    >
+                      {option.nombre}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            </Grid>
+            <Grid item xs={12} sm={4}>
+              <TextField
+                required
+                fullWidth
+                id="clave_busqueda"
+                label="Codigo"
+                name="clave_busqueda"
+                autoComplete="clave_busqueda"
+                value={clave_busqueda}
+                onChange={onInputChange}
+              />
+            </Grid>
+            <Grid item xs={12} sm={4}>
               <TextField
                 required
                 fullWidth
@@ -397,20 +463,14 @@ export const AssetRegister = ({ handlerCloseForm }) => {
             <Grid item xs={4} md={4}>
               <TextField
                 label="Importe"
-                id="importe"
-                type="number"
                 value={importe}
                 onChange={manejarCambio}
-                required
+                name="Importe"
+                id="importe"
                 InputProps={{
-                  startAdornment: (
-                    <InputAdornment position="start">
-                      <IconButton edge="start" disabled>
-                        <AttachMoneyIcon />
-                      </IconButton>
-                    </InputAdornment>
-                  ),
+                  inputComponent: NumericFormatCustom,
                 }}
+                variant="standard"
               />
             </Grid>
             <Grid item xs={4}>
@@ -426,18 +486,6 @@ export const AssetRegister = ({ handlerCloseForm }) => {
                 />
               </LocalizationProvider>
             </Grid>
-
-            {/* <Grid item xs={4}>
-              <LocalizationProvider dateAdapter={AdapterDayjs}>
-                <DatePicker
-                  label="Fecha de Inicio de Uso"
-                  id="fechaInicioUso"
-                  value={fecha_ingreso}
-                  onChange={(date) => handleFechaChange(date, "fecha_ingreso")}
-                  slotProps={{ textField: { variant: "outlined" } }}
-                />
-              </LocalizationProvider>
-            </Grid> */}
             <Grid item xs={4}>
               {" "}
               <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -457,31 +505,20 @@ export const AssetRegister = ({ handlerCloseForm }) => {
                 />{" "}
               </LocalizationProvider>{" "}
             </Grid>
-
             <Grid item xs={12} sm={4}>
-              <TextField
-                required
-                fullWidth
-                id="clave_busqueda"
-                label="Alias o clave de busqueda"
-                name="clave_busqueda"
-                autoComplete="clave_busqueda"
-                value={clave_busqueda}
-                onChange={onInputChange}
-              />
-            </Grid>
-            <input
-              type="hidden"
-              name="estatus"
-              value={estatus}
-              onChange={(e) => setEstatus(e.target.value)}
-            />
-
-            <Grid item xs={4} md={4}>
+</Grid>
+            <Grid item xs={12} sm={4}>
               <Button
                 component="label"
                 variant="contained"
                 color="success"
+                sx={{
+                  marginTop: 0,
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                  width: "100%", // Ajusta el ancho del Box al 100% de la columna
+                }}
                 startIcon={<CloudUploadIcon />}
               >
                 cargar imagen
@@ -490,6 +527,7 @@ export const AssetRegister = ({ handlerCloseForm }) => {
                   accept="image/*"
                   //onChange={(e) => setImagen(e.target.files[0])}
                   onChange={manejarCambioImagen}
+                  required
                 />
               </Button>
               <Snackbar
@@ -499,9 +537,32 @@ export const AssetRegister = ({ handlerCloseForm }) => {
                 message="Fecha de compra e inicio de uso es requerida."
               ></Snackbar>
             </Grid>
-            <Grid item xs={4} md={4}  >
+            <Grid item xs={4} md={4}>
               <Button
                 component="label"
+                variant="contained"
+                color="success"
+                sx={{
+                  marginTop: 0,
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                  width: "100%", // Ajusta el ancho del Box al 100% de la columna
+                }}
+                startIcon={<NoteAddIcon />}
+              >
+                CARGAR DOCUMENTO
+                <VisuallyHiddenInput
+                  type="file"
+                  accept=".doc,.docx,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,.pdf,application/pdf"
+                  onChange={manejarCambioDocumento}
+                  required
+                />
+              </Button>
+            </Grid>
+            <Grid item xs={4} md={4}>
+              <Button
+                type="submit"
                 variant="contained"
                 color="primary"
                 sx={{
@@ -511,19 +572,8 @@ export const AssetRegister = ({ handlerCloseForm }) => {
                   alignItems: "center",
                   width: "100%", // Ajusta el ancho del Box al 100% de la columna
                 }}
-                startIcon={<PlaylistAddCircleIcon />}
+                startIcon={<SaveSharpIcon />}
               >
-                CARGAR DOCUMENTO
-                <VisuallyHiddenInput
-                  type="file"
-                  accept=".doc,.docx,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,.pdf,application/pdf"
-                  onChange={manejarCambioDocumento}
-                />
-              </Button>
-   
-            </Grid>
-            <Grid item xs={6}>
-              <Button type="submit" variant="contained" color="primary">
                 GUARDAR
               </Button>
             </Grid>

@@ -8,14 +8,14 @@ export const initialMovimientoForm = {
   id_departamento: "",
   empleado_id: "",
   user_id: "",
-  doc: ""
+  doc: "",
 };
 
 export const initialDetalleForm = {
   id: 0,
   movimiento_id: "",
   activo_id: "",
-  cantidad: ""
+  cantidad: "",
 };
 
 // export const initialMovimientoForm = {
@@ -29,29 +29,28 @@ export const initialDetalleForm = {
 //   user_id: "",
 // };
 const initialErrors = {
-    id: 0,
-    tipo_movimiento: "",
-    fecha_movimiento: "",
-    descripcion: "",
-    id_sucursal: "",
-    id_departamento: "",
-    empleado_id: "",
-    user_id: "",
-    doc: "",
+  id: 0,
+  tipo_movimiento: "",
+  fecha_movimiento: "",
+  descripcion: "",
+  id_sucursal: "",
+  id_departamento: "",
+  empleado_id: "",
+  user_id: "",
+  doc: "",
 };
-
 
 export const movimientosSlice = createSlice({
   name: "movimientos",
   initialState: {
     movimientos: [], //lista
     detalles: [], // lista de detalles
-    paginator: {},//paginacion
+    paginator: {}, //paginacion
     movimientoSelected: initialMovimientoForm,
     detalleSelected: initialDetalleForm,
     visibleForm: false,
-    errors: initialErrors,//errores
-    isLoading: true,//carga
+    errors: initialErrors, //errores
+    isLoading: true, //carga
   },
   reducers: {
     addMovimiento: (state, action) => {
@@ -75,8 +74,9 @@ export const movimientosSlice = createSlice({
       state.visibleForm = false;
     },
     removeMovimiento: (state, action) => {
-        state.movimientos = state.movimientos.filter
-        (movimiento => movimiento.id !== action.payload);
+      state.movimientos = state.movimientos.filter(
+        (movimiento) => movimiento.id !== action.payload
+      );
     },
     updateMovimiento: (state, action) => {
       state.movimientos = state.movimientos.map((u) => {
@@ -94,9 +94,14 @@ export const movimientosSlice = createSlice({
       state.isLoading = true;
       state.errors = null;
     },
-    loadingData: (state, { payload }) => {
+    loadingMov: (state, { payload }) => {
       state.movimientos = payload.content;
       state.paginator = payload;
+      state.isLoading = false;
+    },
+    loadingData: (state, { payload }) => {
+      // console.log('loadingData mov', payload); // Agregar un console.log() para imprimir los datos de payload
+      state.movimientos = payload;
       state.isLoading = false;
     },
     onMovimientoSelectedForm: (state, { payload }) => {
@@ -123,13 +128,13 @@ export const movimientosSlice = createSlice({
 
 export const {
   addMovimiento,
-   removeMovimiento,
-   updateMovimiento,
-loadingData,
-onMovimientoSelectedForm,
-onDetalleSelectedForm,
+  removeMovimiento,
+  updateMovimiento,
+  loadingMov,
+  loadingData,
+  onMovimientoSelectedForm,
+  onDetalleSelectedForm,
   onOpenForm,
   onCloseForm,
   loadingError,
 } = movimientosSlice.actions;
-

@@ -24,6 +24,7 @@ import {
   TableRow,
   Paper,
   Button,
+  TextField,
 } from "@mui/material";
 
 export const MovimientosList = () => {
@@ -34,8 +35,34 @@ export const MovimientosList = () => {
   };
   const { movimientos } = useMovimientos();
   const { login } = useAuth();
+  const [searchTerm, setSearchTerm] = useState("");
+  const searchColumns = ['descripcion', 'tipo_movimiento', 'id_departamento']; // Columnas en las que se realizará la búsqueda
+
+  const handleSearchTermChange = (event) => {
+    console.log("", event.target.value);
+    setSearchTerm(event.target.value);
+  };
+
+
+  const filteredMovimientos = movimientos.filter((mov) =>
+  searchColumns.some((column) =>
+    mov[column].toString().toLowerCase().includes(searchTerm.toLowerCase())
+  )
+);
   return (
-   
+
+    <div style={{ margin: "20px", maxHeight: "700px", overflow: "auto" }}>
+
+    <TextField
+      label="Buscar movimiento"
+      variant="outlined"
+      value={searchTerm}
+      onChange={handleSearchTermChange}
+      fullWidth
+      margin="normal"
+      sx={{ maxWidth: "400px" }}
+    />
+
     <TableContainer
       component={Paper}
       style={{
@@ -93,11 +120,7 @@ export const MovimientosList = () => {
             </TableCell>
           </TableRow>
         </TableHead>
-        <TableBody>
-        
-              {/* {rows.map((row) => (
-            <Row key={row.name} row={row} />
-          ))} */}
+        {/* <TableBody>
           {
                 movimientos.map(({ //imagen, 
                   id, tipo_movimiento, fecha_movimiento, descripcion, id_sucursal, id_departamento, empleado_id }) => (
@@ -115,9 +138,15 @@ export const MovimientosList = () => {
                 ))
             }
            
-        </TableBody>
+        </TableBody> */}
+        <TableBody>
+            {filteredMovimientos.map((mov) => (
+              <MovimientosRow key={mov.id} {...mov} />
+            ))}
+          </TableBody>
       </Table>
 
     </TableContainer>
+    </div>
   );
 };

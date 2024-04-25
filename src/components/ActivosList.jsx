@@ -10,6 +10,9 @@ import Typography from "@mui/material/Typography";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import MenuIcon from "@mui/icons-material/Menu";
+import jsPDF from "jspdf";
+import "jspdf-autotable";
+import JsBarcode from 'jsbarcode';
 
 import {
   Table,
@@ -47,10 +50,47 @@ export const ActivosList = () => {
 );
 
 
+const generatePDF = () => {
+  const pdf = new jsPDF();
+
+  const rows = filteredActivos.map((activo) => {
+    let barcodeData;
+    try {
+      const canvas = document.createElement('canvas');
+      JsBarcode(canvas, activo.clave_busqueda);
+      barcodeData = canvas.toDataURL();
+    } catch (error) {
+      console.error('Error al generar el código de barras:', error);
+      barcodeData = ''; // Si hay un error, dejar el código de barras en blanco
+    }
+
+    return [
+      activo.clave_busqueda,
+      activo.descripcion,
+      { data: barcodeData, width: 100, height: 40 }
+    ];
+  });
+
+  pdf.autoTable({
+    head: [['Código de Barras', 'Descripción', '']], // Encabezado de la tabla
+    body: rows, // Cuerpo de la tabla
+    didDrawCell: (data) => {
+      // Verificar si es la celda de la imagen y renderizar la imagen correctamente
+      if (data.column.index === 2 && typeof data.cell.raw === 'object' && data.cell.raw.data) {
+        const { x, y, width, height } = data.cell;
+        pdf.addImage(data.cell.raw.data, 'JPEG', x + 2, y + 2, width - 4, height - 4);
+      }
+    },
+    // Ajustar la altura de las filas para dar espacio adicional a la imagen del código de barras
+    bodyStyles: { cellPadding: 10, rowHeight: 60 } // Puedes ajustar el valor de rowHeight según sea necesario
+  });
+
+  pdf.save('activos.pdf'); // Guardar el PDF con un nombre específico
+};
 
   return (
-  <div style={{ margin: "20px", maxHeight: "700px", overflow: "auto" }}>
-
+    <div style={{ margin: "20px", maxHeight: "700px", overflow: "auto" }}>
+    <div style={{ marginBottom: "10px", marginTop: "10px" }}>
       <TextField
         label="Buscar activo"
         variant="outlined"
@@ -60,6 +100,17 @@ export const ActivosList = () => {
         margin="normal"
         sx={{ maxWidth: "400px" }}
       />
+      {/* Botón para descargar PDF */}
+      <Button
+        variant="contained"
+        color="primary"
+        onClick={generatePDF}
+        style={{ marginLeft: "10px", marginTop: "25px" }}
+      >
+        Descargar PDF
+      </Button>
+    </div>
+
       <TableContainer
         component={Paper}
         style={{
@@ -77,6 +128,12 @@ export const ActivosList = () => {
                 align="center"
               >
                 IMG
+              </TableCell>
+              <TableCell style={{ color: "#fff", fontWeight: "bold" }} align="center">
+                CODIGO
+              </TableCell>
+              <TableCell style={{ color: "#fff", fontWeight: "bold" }} align="center">
+                CODIGO DE BARRAS
               </TableCell>
               <TableCell style={{ color: "#fff", fontWeight: "bold" }}>
                 NOMBRE

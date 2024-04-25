@@ -14,14 +14,19 @@ export const MovimientosPage = () => {
     isLoading,
     paginator,
     handlerOpenForm,
-    getMovimientos,
+    //getMovimientos,
+    getListMov,
   } = useMovimientos();
 
   const { login } = useAuth();
 
+  // useEffect(() => {
+  //   getMovimientos(page);
+  // }, [, page]);
   useEffect(() => {
-    getMovimientos(page);
-  }, [, page]);
+    // Elimina 'page' de los parámetros de la función getActivos
+    getListMov();
+  }, []);
 
   if (isLoading) {
     return (
@@ -49,9 +54,9 @@ export const MovimientosPage = () => {
             ) : (
               <>
                 <MovimientosList />
-                  <PaginatorA url="/movimientos/page" paginator={paginator}
+                  {/* <PaginatorA url="/movimientos/page" paginator={paginator}
                   />
-               
+                */}
               </>
             )}
           </div>

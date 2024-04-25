@@ -28,7 +28,7 @@ export const save = async ({
   fabricante_id,
   modelo,
   no_serie,
-  tipo,
+  clasificacion,
   grupoactivo_id,
   proveedor_id,
   factura,
@@ -49,7 +49,7 @@ export const save = async ({
     formData.append('fabricante_id', fabricante_id);
     formData.append('modelo', modelo);
     formData.append('no_serie', no_serie);
-    formData.append('tipo', tipo);
+    formData.append('clasificacion', clasificacion);
     formData.append('grupoactivo_id', grupoactivo_id);
     formData.append('proveedor_id', proveedor_id);
     formData.append('factura', factura);
@@ -80,7 +80,7 @@ export const save2 = async ({
   fabricante_id,
   modelo,
   no_serie,
-  tipo,
+  clasificacion,
   grupoactivo_id,
   proveedor_id,
   factura,
@@ -100,7 +100,7 @@ export const save2 = async ({
       fabricante_id,
       modelo,
       no_serie,
-      tipo,
+      clasificacion,
       grupoactivo_id,
       proveedor_id,
       factura,
@@ -155,7 +155,7 @@ export const update = async ({
     fabricante_id,
     modelo,
     no_serie,
-    tipo,
+    clasificacion,
     grupoactivo_id,
     proveedor_id,
     factura,
@@ -175,7 +175,7 @@ export const update = async ({
         fabricante_id,
         modelo,
         no_serie,
-        tipo,
+        clasificacion,
         grupoactivo_id,
         proveedor_id,
         factura,

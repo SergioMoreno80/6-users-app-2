@@ -13,9 +13,8 @@ import { format } from "date-fns";
 import Fab from "@mui/material/Fab";
 import EditRoundedIcon from "@mui/icons-material/EditRounded";
 import RemoveIcon from "@mui/icons-material/Remove";
-import jsPDF from "jspdf";
-import autoTable from "jspdf-autotable";
 import PictureAsPdfIcon from "@mui/icons-material/PictureAsPdf";
+import JsBarcode from 'react-jsbarcode';
 
 import {
   Table,
@@ -28,7 +27,8 @@ import {
   Button,
 } from "@mui/material";
 import pc from "../images/pc escritorio.webp"; // Ajusta la ruta a tu imagen de logotipo
-
+import jsPDF from "jspdf";
+import "jspdf-autotable";
 export const ActivoRow = ({
   imagen,
   activo_id,
@@ -43,6 +43,7 @@ export const ActivoRow = ({
   estatus,
   foto,
   proveedor,
+  clave_busqueda,
 }) => {
   const { handlerActivoSelectedForm, handlerRemoveActivo } = useActivos();
   const { login } = useAuth();
@@ -76,7 +77,7 @@ export const ActivoRow = ({
     ];
 
     pdf.autoTable({ startY: 30, columns: columnas, body: datos });
-    pdf.save("activos_".concat(id).concat(".pdf"));
+    pdf.save("activos_".concat(activo_id).concat(".pdf"));
   };
 
   // Convertir la cadena a un objeto Date
@@ -112,6 +113,8 @@ export const ActivoRow = ({
             />
           </NavLink>
         </TableCell>
+        <TableCell align="center">{clave_busqueda}</TableCell>
+        <TableCell align="center"><JsBarcode value={clave_busqueda} /></TableCell>
 
         <TableCell component="th" scope="row" align="left">
           {nombre}

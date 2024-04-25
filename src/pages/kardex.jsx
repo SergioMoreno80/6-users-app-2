@@ -5,7 +5,6 @@ import { useMovimientos } from "../hooks/useMovimientos";
 import { useActivos } from "../hooks/useActivos";
 import { useParams } from "react-router-dom";
 import { useAuth } from "../auth/hooks/useAuth";
-import { PaginatorA } from "../components/PaginatorA";
 import {
   Typography,
   Grid,
@@ -63,6 +62,16 @@ export const Kardex = () => {
     const pdf = new jsPDF();
     const pageWidth = pdf.internal.pageSize.getWidth();
     const pageHeight = pdf.internal.pageSize.getHeight();
+
+    let barcodeData;
+    try {
+      const canvas = document.createElement("canvas");
+      JsBarcode(canvas, activoSelected.clave_busqueda);
+      barcodeData = canvas.toDataURL();
+    } catch (error) {
+      console.error("Error al generar el código de barras:", error);
+      barcodeData = ""; // Si hay un error, dejar el código de barras en blanco
+    }
     // Agregar la imagen primero
     var image1 = new Image();
     image1.onload = function () {
@@ -72,6 +81,19 @@ export const Kardex = () => {
       const imageY = 20; // Posición en la parte superior de la página
       console.log(`Imprimiendo en ${imageX},${imageY}`);
       pdf.addImage(image1, "JPEG", imageX, imageY, imageWidth, imageHeight);
+      // Agregar el código de barras debajo de la imagen
+      const barcodeWidth = 50; // Ancho del código de barras más pequeño
+      const barcodeHeight = 30; // Altura del código de barras más pequeño
+      const barcodeX = (pageWidth - barcodeWidth) / 2;
+      const barcodeY = imageY + imageHeight + 10; // Espacio entre la imagen y el código de barras
+      pdf.addImage(
+        barcodeData,
+        "PNG",
+        barcodeX,
+        barcodeY,
+        barcodeWidth,
+        barcodeHeight
+      );
 
       // Información del activo
       const title = "Kardex del activo";
@@ -81,11 +103,15 @@ export const Kardex = () => {
       const titleX = (pageWidth - titleWidth) / 2;
       const titleY = imageY + imageHeight + 20;
       pdf.setFontSize(18);
-      pdf.text(title, titleX, titleY);
+      //pdf.text(title, titleX, titleY);
+      // Información del activo (tabla)
+      const tableX = 10; // Ajusta la posición X de la tabla según sea necesario
+      const tableY = titleY + 10; // Espacio entre el título y la tabla
       pdf.autoTable({
-        startY: titleY + 10,
+        startY: titleY + 30,
         head: [["Campos", "Informacion"]],
         body: activoInfo,
+        margin: { top: tableY }
       });
 
       // Información de los movimientos
@@ -100,7 +126,16 @@ export const Kardex = () => {
       pdf.text(movimientosTitle, movimientosTitleX, 20);
       pdf.autoTable({
         startY: 30,
-        head: [["Tipo", "Fecha", "Descripcion",  "Sucursal",  "Departamento", "Usuario"]],
+        head: [
+          [
+            "Tipo",
+            "Fecha",
+            "Descripcion",
+            "Sucursal",
+            "Departamento",
+            "Usuario",
+          ],
+        ],
         body: movimientoData,
       });
 
@@ -117,7 +152,7 @@ export const Kardex = () => {
 
   const formatCurrency = (amount) => {
     if (!amount) return ""; // Verificar si el importe está definido
-  
+
     return new Intl.NumberFormat("es-MX", {
       style: "currency",
       currency: "MXN",
@@ -141,9 +176,6 @@ export const Kardex = () => {
     movimiento.id_departamento,
     movimiento.empleado_id,
   ]);
-
-  
-  
 
   if (isLoading) {
     return (
