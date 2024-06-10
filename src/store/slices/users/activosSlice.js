@@ -70,21 +70,26 @@ export const activosSlice = createSlice({
       state.activoSelected = initialActivoForm; //reiniciar estado
       state.visibleForm = false;
     },
+    // addActivo: (state, action) => {
+    //   // Añadir un nuevo activo
+    //   state.activos.push(action.payload);
+    //   state.activoSelected = initialActivoForm; // reiniciar estado
+    //   state.visibleForm = false;
+    // },
     removeActivo: (state, action) => {
       state.activos = state.activos.filter(
         (activo) => activo.activo_id !== action.payload
       );
     },
     updateActivo: (state, action) => {
-      state.activos = state.activos.map((u) => {
-        if (u.id === action.payload.id) {
-          return {
-            ...action.payload,
-          };
+      // Actualizar un activo
+      state.activos = state.activos.map((activo) => {
+        if (activo.activo_id === action.payload.activo_id) {
+          return action.payload;
         }
-        return u;
+        return activo;
       });
-      state.activoSelected = initialActivoForm; //reinciar estado
+      state.activoSelected = initialActivoForm; // reiniciar estado
       state.visibleForm = false;
     },
     loadingDatosInicio: (state) => {

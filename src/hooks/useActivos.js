@@ -40,17 +40,33 @@ export const useActivos = () => {
     }
   };
 //listado de activos para busqueda inteligente.
+  // const getList = async () => {
+  //   try {
+  //     const result = await findAll();
+  //     console.log("Lista de activos desde hook - :", result.data); // Agregar este console.log
+  //     dispatch(loadingData(result.data));
+  //   } catch (error) {
+  //     if (error.response?.status == 401) {
+  //       handlerLogout();
+  //   }
+  //   }
+  // };
+
   const getList = async () => {
     try {
       const result = await findAll();
-      console.log("Lista de activos desde hook - :", result.data); // Agregar este console.log
+      console.log("Lista de activos desde hook - :", result.data);
+      // Reemplazar los activos existentes con la nueva lista
       dispatch(loadingData(result.data));
     } catch (error) {
-      if (error.response?.status == 401) {
+      if (error.response?.status === 401) {
         handlerLogout();
-    }
+      } else {
+        console.error("Error fetching activos:", error);
+      }
     }
   };
+  
 
   const handlerAddActivo = async (activo) => {
     if (!login.isAdmin) return;
@@ -65,14 +81,19 @@ export const useActivos = () => {
       }
 
       Swal.fire(
-        activo.id === 0 ? "activo Creado" : "activo Actualizado",
-        activo.id === 0
-          ? "El activo ha sido creado con exito!"
-          : "El activo ha sido actualizado con exito!",
-        "success"
+        // activo.id === 0 ? "activo Creado" : "activo Actualizado",
+        
+        (activo.id === 0) ?
+        'Activo Creado' :
+        'Activo Actualizado',
+        (activo.id === 0) ?
+        'El activo ha sido creado con exito!' :
+        'El activo ha sido actualizado con exito!',
+    'success'
       );
       handlerCloseForm();
-      navigate("/activos");
+      activo.id === 0 ? 
+      navigate("/AssetPage/register"): navigate("/activos");
     } catch (error) {
       if (error.response && error.response.status == 400) {
         dispatch(loadingError(error.response.data));

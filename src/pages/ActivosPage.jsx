@@ -28,6 +28,8 @@ export const ActivosPage = () => {
     activoSelected,
   } = useActivos();
   const { login } = useAuth();
+  const apiUrl = import.meta.env.VITE_IMAGE_BASE_URL;
+
 
   // useEffect(() => {
   //   getActivos(page);
@@ -94,7 +96,9 @@ export const ActivosPage = () => {
 
       pdf.save("activo_y_movimientos.pdf");
     };
-    image1.src = "http://localhost:8080/imagenes/" + activoSelected.foto;
+    //image1.src = "http://ec2-3-141-190-125.us-east-2.compute.amazonaws.com:8080/imagenes/" + activoSelected.foto;
+    image1.src = `${apiUrl}/` + activoSelected.foto;
+
   };
   if (isLoading) {
     return (
@@ -106,15 +110,6 @@ export const ActivosPage = () => {
   return (
     <>
       {!visibleForm || <UserModalForm />}
-      {/* <Typography
-        variant="h4"
-        color="black"
-        align="center"
-        gutterBottom
-        style={{ marginTop: "100px" }}
-      >
-        KARDEX DEL 
-      </Typography> */}
       
       <div className="container my-4 text-center">
         <h2>Listado de activos</h2>

@@ -69,8 +69,8 @@ export const save = async ({
     return await activosApi.post(BASE_URL, formData);
       //return await activosApi.post(BASE_URL, formData, config);
   } catch (error) {
-    console.error(error);
-      throw error;
+    console.error('Error al guardar el activo:', error.message);
+    throw error;
   }
 }
 //GUARDADO SIN FILE IMAGE
@@ -111,25 +111,7 @@ export const save2 = async ({
       fecha_ingreso,
       //admin,
     }));
-    //formData.append('imagenR', imagen);
-    // return await activosApi.post(BASE_URL, {
 
-    //     nombre,
-    //     descripcion,
-    //     fabricante_id,
-    //     modelo,
-    //     no_serie,
-    //     tipo,
-    //     grupoactivo_id,
-    //     proveedor_id,
-    //     factura,
-    //     estatus,
-    //     clave_busqueda,
-    //     importe,
-    //     fecha_compra,
-    //     fecha_ingreso,
-    //     imagen,
-    //   });
         return await activosApi.post(BASE_URL,formData, 
         {
         headers: {
@@ -149,7 +131,7 @@ export const save2 = async ({
   }
 };
 
-export const update = async ({ 
+export const update2 = async ({ 
     activo_id, nombre,
     descripcion,
     fabricante_id,
@@ -189,6 +171,65 @@ export const update = async ({
     });
   } catch (error) {
     throw error;
+  }
+};
+
+export const update = async ({ 
+////
+activo_id,nombre,
+  descripcion,
+  fabricante_id,
+  modelo,
+  no_serie,
+  clasificacion,
+  grupoactivo_id,
+  proveedor_id,
+  factura,
+  estatus,
+  clave_busqueda,
+  importe,
+  fecha_compra,
+  fecha_ingreso, imagen, doc, documento, foto}) => {
+  try {
+    const config = {
+      headers: {
+        'Content-Type': 'multipart/form-data' // Establece el tipo de contenido a multipart/form-data
+      }
+    };
+    const formData = new FormData();
+    formData.append('activo_id', activo_id);
+    formData.append('nombre', nombre);
+    formData.append('descripcion', descripcion);
+    formData.append('fabricante_id', fabricante_id);
+    formData.append('modelo', modelo);
+    formData.append('no_serie', no_serie);
+    formData.append('clasificacion', clasificacion);
+    formData.append('grupoactivo_id', grupoactivo_id);
+    formData.append('proveedor_id', proveedor_id);
+    formData.append('factura', factura);
+    formData.append('estatus', estatus);
+    formData.append('clave_busqueda', clave_busqueda);
+    formData.append('importe', importe);
+    formData.append('fecha_compra', fecha_compra);
+    formData.append('fecha_ingreso', fecha_ingreso);
+    formData.append('documento', documento);
+    formData.append('foto',foto);
+    console.log('loadingData activo en service update', formData); 
+
+     // Agrega la imagen si está presente
+     if (imagen) {
+      formData.append('imagen', imagen);
+    }
+    if (doc) {
+      formData.append('doc', doc);
+    }
+    // return await activosApi.put(`${BASE_URL}/${activo_id}`, formData);
+    // return await activosApi.put(BASE_URL, formData);
+    return await activosApi.put(`${BASE_URL}/${activo_id}`, formData, config);
+
+  } catch (error) {
+    console.error(error);
+      throw error;
   }
 };
 

@@ -1,3 +1,4 @@
+import { format } from "date-fns"; // Mover la importación de format al principio del componente
 import { NavLink } from "react-router-dom";
 import { useMovimientos } from "../hooks/useMovimientos";
 import { useAuth } from "../auth/hooks/useAuth";
@@ -10,7 +11,6 @@ import Collapse from "@mui/material/Collapse";
 import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
 import React, { useState } from "react";
-import { format } from "date-fns";
 import jsPDF from 'jspdf'
 import autoTable from 'jspdf-autotable'
 
@@ -34,6 +34,15 @@ export const MovimientosKardex = ({
   id_departamento,
   empleado_id,
 }) => {
+  console.log("Datos recibidos:", {
+    id,
+    tipo_movimiento,
+    fecha_movimiento,
+    descripcion,
+    id_sucursal,
+    id_departamento,
+    empleado_id,
+  });
   const { handlerMovimientoSelectedForm, handlerRemoveMovimiento } =
     useMovimientos();
   const { login } = useAuth();

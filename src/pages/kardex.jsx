@@ -55,7 +55,18 @@ export const Kardex = () => {
       setActivoSelected(activo);
     }
   }, [id]);
-
+  const apiUrl = import.meta.env.VITE_IMAGE_BASE_URL;
+  const getFormattedDateTime = () => {
+    const now = new Date();
+    const year = now.getFullYear();
+    const month = String(now.getMonth() + 1).padStart(2, '0');
+    const day = String(now.getDate()).padStart(2, '0');
+    const hours = String(now.getHours()).padStart(2, '0');
+    const minutes = String(now.getMinutes()).padStart(2, '0');
+    const seconds = String(now.getSeconds()).padStart(2, '0');
+    
+    return `${year}-${month}-${day}_${hours}-${minutes}-${seconds}`;
+  };
   const generatePDF = () => {
     if (isLoading) return; // Evita la generación del PDF mientras se carga
 
@@ -138,10 +149,11 @@ export const Kardex = () => {
         ],
         body: movimientoData,
       });
-
-      pdf.save("activo_y_movimientos.pdf");
+      const formattedDateTime = getFormattedDateTime();
+      const fileName = `activo_y_movimientos_${formattedDateTime}.pdf`;
+      pdf.save(fileName);
     };
-    image1.src = "http://localhost:8080/imagenes/" + activoSelected.foto;
+    image1.src =  apiUrl + "/"+ activoSelected.foto;
   };
   const formatDate = (dateString) => {
     if (!dateString) return ""; // Verificar si la cadena de fecha está vacía
@@ -210,7 +222,9 @@ export const Kardex = () => {
           }}
         >
           <img
-            src={`http://localhost:8080/imagenes/${activoSelected.foto}`}
+            // src={`http://ec2-3-141-190-125.us-east-2.compute.amazonaws.com:8080/imagenes/${activoSelected.foto}`}
+            src={`${apiUrl}/${activoSelected.foto}`} // Concatenación correcta
+
             alt={activoSelected.nombre}
             className="img-fluid"
             style={{
@@ -293,13 +307,13 @@ export const Kardex = () => {
         MOVIMIENTOS
       </Typography>
       {movimientos.length === 0 ? (
-        <div className="alert alert-warning">
+        <div className="alert alert-warning text-center">
           No hay movimientos en el sistema.
         </div>
       ) : (
         <>
           <Grid item xs={12} md={8} style={{ paddingLeft: "35px" }}>
-            <KardexList />
+          <KardexList activo={activoSelected} />
           </Grid>
         </>
       )}

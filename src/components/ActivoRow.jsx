@@ -15,7 +15,8 @@ import EditRoundedIcon from "@mui/icons-material/EditRounded";
 import RemoveIcon from "@mui/icons-material/Remove";
 import PictureAsPdfIcon from "@mui/icons-material/PictureAsPdf";
 import JsBarcode from 'react-jsbarcode';
-
+import jsPDF from "jspdf";
+import "jspdf-autotable";
 import {
   Table,
   TableBody,
@@ -27,8 +28,7 @@ import {
   Button,
 } from "@mui/material";
 import pc from "../images/pc escritorio.webp"; // Ajusta la ruta a tu imagen de logotipo
-import jsPDF from "jspdf";
-import "jspdf-autotable";
+
 export const ActivoRow = ({
   imagen,
   activo_id,
@@ -58,13 +58,11 @@ export const ActivoRow = ({
     // Renderizar el contenido de la fila en un lienzo HTML
     console.log("crea PDF");
     //testing code fr error at line 57
-
     const pdf = new jsPDF();
     pdf.text("Activos", 70, 20);
 
     const columnas = [
       "ID",
-
       "FECHA_COMPRA",
       "DESCRIPCION",
       "PROVEEDOR",
@@ -86,7 +84,8 @@ export const ActivoRow = ({
   // Dar formato a la fecha utilizando date-fns
   const formattedDate = format(dateObject, "dd/MM/yyyy");
   //      <TableCell>{formattedDate}</TableCell>
-
+  const base = import.meta.env.VITE_API_BASE_URL;
+  const apiUrl = import.meta.env.VITE_IMAGE_BASE_URL;
   return (
     <React.Fragment>
       <TableRow sx={{ "& > *": { borderBottom: "unset" } }}>
@@ -100,14 +99,9 @@ export const ActivoRow = ({
           </IconButton>
         </TableCell> */}
         <TableCell>
-          {/* <img
-            src={`http://localhost:8080/imagenes/${foto}`}
-            alt={foto}
-            style={{ width: "50px" }}
-          /> */}
           <NavLink to={`/Assets/kardex/${activo_id}`}>
-            <img
-              src={`http://localhost:8080/imagenes/${foto}`}
+            <img          
+               src={`${apiUrl}/${foto}`} // Concatenación correcta
               alt={foto}
               style={{ width: "50px" }}
             />
@@ -115,27 +109,25 @@ export const ActivoRow = ({
         </TableCell>
         <TableCell align="center">{clave_busqueda}</TableCell>
         <TableCell align="center"><JsBarcode value={clave_busqueda} /></TableCell>
-
         <TableCell component="th" scope="row" align="left">
           {nombre}
         </TableCell>
-
         <TableCell align="center">{factura}</TableCell>
         <TableCell align="center">{formattedDate}</TableCell>
         <TableCell align="center">{formattedCurrency}</TableCell>
         <TableCell align="center">{proveedor}</TableCell>
-        {/* <TableCell align="center">
-          <NavLink to={"/Assets/edit/" + id}>
+        <TableCell align="center">
+          <NavLink to={"/activos/edit/" + activo_id}>
             <Fab>
               <EditRoundedIcon />
             </Fab>
           </NavLink>
-        </TableCell> */}
+        </TableCell>
         <TableCell align="center">
           <Fab
             color="error"
             aria-label="add"
-            onClick={() => handlerRemoveActivo(id)}
+            onClick={() => handlerRemoveActivo(activo_id)}
           >
             <RemoveIcon />
           </Fab>

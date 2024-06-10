@@ -9,7 +9,7 @@ import { AssetPage } from "../pages/AssetPage";
 import { DashAsset } from "../pages/DashAsset";
 import { AssetList } from "../pages/AssetList";
 import { UsersPage } from "../pages/UsersPage";
-import { ActivosPage } from "../pages/activosPage";
+import { ActivosPage } from "../pages/ActivosPage";
 import { MovimientosPage } from "../pages/MovimientosPage";
 import { useSelector } from "react-redux";
 import { Personal } from "../pages/Personal";
@@ -54,11 +54,8 @@ export const UserRoutes = () => {
           <>
             <Route path="users/register" element={<RegisterPage />} />
             <Route path="users/edit/:id" element={<RegisterPage />} />
-            <Route path="Assets/edit/:id" element={<AssetReg />} />
+            <Route path="activos/edit/:id" element={<AssetReg />} />
             <Route path="Assets/kardex/:id" element={<Kardex />} />
-
-
-
           </>
         )}
         <Route path="/" element={<Navigate to="/AssetPage/register" />} />

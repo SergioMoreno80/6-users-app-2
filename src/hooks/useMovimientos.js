@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
-import { findAll,findAllPages, remove, save, update, saveDetalles  } from "../services/movimientoService";
+import { findAll,findByActivoId,findAllPages, remove, save, update, saveDetalles  } from "../services/movimientoService";
 
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -11,6 +11,7 @@ import {
   updateMovimiento,
   loadingMov,
   loadingData,
+  loadingDatabyActivo,
   onMovimientoSelectedForm,
   onDetalleSelectedForm,
   onOpenForm,
@@ -55,6 +56,20 @@ export const useMovimientos = () => {
     }
   };
 
+  const getListByActivo = async (activoId) => {
+    try {
+      const result = await findByActivoId(activoId);
+      console.log("Lista de movimientos por activo - :", result.data); 
+      dispatch(loadingDatabyActivo(result.data));
+    } catch (error) {
+      if (error.response?.status == 401) {
+        handlerLogout();
+    }else {
+      throw error; // Lanza el error para que el componente que utiliza el hook pueda manejarlo
+    }
+    }
+  };
+
   const handlerAddMovimiento = async (movimiento, detalle) => {
     console.log("movimiento",movimiento);
     console.log("detalle", detalle);
@@ -91,7 +106,7 @@ export const useMovimientos = () => {
       );
       handlerCloseForm();
       console.error("voy a entrar a navigate");
-      navigate("/movimientos");
+      navigate("/AssignAsset/process");
     } catch (error) {
       if (error.response && error.response.status == 400) {
         dispatch(loadingError(error.response.data));
@@ -176,5 +191,6 @@ export const useMovimientos = () => {
     handlerCloseForm,
     getMovimientos,
     getListMov,
+    getListByActivo,
   };
 };

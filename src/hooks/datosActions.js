@@ -11,7 +11,7 @@ import activosApi from "../apis/activosApi";
 const BASE_URL_A = '';
 
 //const URL_API = 'http://localhost:8080/api/activos';
-
+// ruta imagenes aws ec2-3-141-190-125.us-east-2.compute.amazonaws.com
 // export const cargarDatos2 = (pagina) => async (dispatch) => {
 //   try {
 //     dispatch(cargarDatosInicio());

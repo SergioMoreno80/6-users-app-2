@@ -1,7 +1,9 @@
 import { MovimientosKardex } from "../components/MovimientosKardex";
 import { useMovimientos } from "../hooks/useMovimientos";
 import { useAuth } from "../auth/hooks/useAuth";
-import React, { useState } from "react";
+// import React, { useState } from "react";
+import { useEffect, useState } from "react";
+
 import {
   Table,
   TableBody,
@@ -14,13 +16,18 @@ import {
 } from "@mui/material";
 export const KardexList = ({ activo }) => {
 
-
-  const [isTableExpanded, setTableExpanded] = useState(true);
-
-  const toggleTableSize = () => {
-    setTableExpanded(!isTableExpanded);
-  };
-  const { movimientos } = useMovimientos();
+  // const [isTableExpanded, setTableExpanded] = useState(true);
+  // const toggleTableSize = () => {
+  //   setTableExpanded(!isTableExpanded);
+  // };
+  const { movimientos, getListByActivo } = useMovimientos();
+  //const filteredMovimientos = movimientos.filter((movimiento) => movimiento.activo_id === activo.activo_id);
+  useEffect(() => {
+    // Llama al hook getListByActivo al montar el componente
+    if (activo && activo.activo_id) {
+      getListByActivo(activo.activo_id);
+    }
+  }, [activo]); 
   const { login } = useAuth();
   return (
    
@@ -93,6 +100,21 @@ export const KardexList = ({ activo }) => {
                 ))
             }          
         </TableBody>
+         {/* <TableBody>
+          {filteredMovimientos.map(({ id, tipo_movimiento, fecha_movimiento, descripcion, id_sucursal, id_departamento, empleado_id }) => (
+            <MovimientosKardex
+              key={id}
+              id={id}
+              tipo_movimiento={tipo_movimiento}
+              fecha_movimiento={fecha_movimiento}
+              descripcion={descripcion}
+              id_sucursal={id_sucursal}
+              id_departamento={id_departamento}
+              empleado_id={empleado_id}
+            />
+            
+          ))}
+        </TableBody> */}
       </Table>
     </TableContainer>
   );

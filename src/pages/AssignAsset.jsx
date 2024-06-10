@@ -178,7 +178,11 @@ export const AssignAsset = () => {
       console.log('INFO de los detalle de detalleForm:  ', detalleForm);
     //return;
     handlerAddMovimiento(movimientoForm, detalleForm);
-    
+    // Limpiar campos después de guardar
+    setMovimientoForm(initialMovimientoForm);
+    setDetalleForm([]);
+    setActivosUtilizados([]);
+    setSelectedActivo("");
   };
 
   if (isLoading) {

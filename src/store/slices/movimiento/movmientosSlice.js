@@ -104,6 +104,11 @@ export const movimientosSlice = createSlice({
       state.movimientos = payload;
       state.isLoading = false;
     },
+    loadingDatabyActivo: (state, { payload }) => {
+      // console.log('loadingData mov', payload); // Agregar un console.log() para imprimir los datos de payload
+      state.movimientos = payload;
+      state.isLoading = false;
+    },
     onMovimientoSelectedForm: (state, { payload }) => {
       state.movimientoSelected = payload;
       state.visibleForm = true;
@@ -132,6 +137,7 @@ export const {
   updateMovimiento,
   loadingMov,
   loadingData,
+  loadingDatabyActivo,
   onMovimientoSelectedForm,
   onDetalleSelectedForm,
   onOpenForm,

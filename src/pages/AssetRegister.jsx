@@ -1,12 +1,11 @@
 import React, { useState, useEffect } from "react";
 import activosApi from "../apis/activosApi";
-import InputAdornment from "@mui/material/InputAdornment";
-import IconButton from "@mui/material/IconButton";
 import NoteAddIcon from "@mui/icons-material/NoteAdd";
-import PlaylistAddCircleIcon from "@mui/icons-material/PlaylistAddCircle";
 import PropTypes from "prop-types";
 import { NumericFormat } from "react-number-format";
 import SaveSharpIcon from "@mui/icons-material/SaveSharp";
+import Autocomplete from "@mui/material/Autocomplete";
+
 import {
   TextField,
   Grid,
@@ -27,32 +26,22 @@ import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { styled } from "@mui/material/styles";
 import Button from "@mui/material/Button";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
-import AttachMoneyIcon from "@mui/icons-material/AttachMoney";
 import { useActivos } from "../hooks/useActivos";
 
 dayjs.locale("es");
 
 const BASE_URL = "";
-// const clasificacion = [
+
+// const estatusVal = [
 //   {
-//     value: "P",
-//     name: "PROPIO",
+//     value: "A",
+//     name: "ACTIVO",
 //   },
 //   {
-//     value: "C",
-//     name: "CONSIGNACION",
+//     value: "I",
+//     name: "INACTIVO",
 //   },
 // ];
-const estatusVal = [
-  {
-    value: "A",
-    name: "ACTIVO",
-  },
-  {
-    value: "I",
-    name: "INACTIVO",
-  },
-];
 
 const VisuallyHiddenInput = styled("input")({
   clip: "rect(0 0 0 0)",
@@ -94,7 +83,7 @@ NumericFormatCustom.propTypes = {
   name: PropTypes.string.isRequired,
   onChange: PropTypes.func.isRequired,
 };
-export const AssetRegister = ({ handlerCloseForm }) => {
+export const AssetRegister = ({ activoSelected, handlerCloseForm }) => {
   const { initialActivoForm, handlerAddActivo, errors } = useActivos(); //inicializar forma
 
   const [activoForm, setActivoForm] = useState(initialActivoForm);
@@ -115,10 +104,23 @@ export const AssetRegister = ({ handlerCloseForm }) => {
     fecha_ingreso,
     imagen,
     doc,
+    documento,
+    foto,
   } = activoForm;
 
   ////ejemplo de carga de imagenes desde react y spring data
   const [alertaAbierta, setAlertaAbierta] = useState(false);
+// manejo de edicion de activos activo_id clave.
+
+useEffect(() => {
+  if (activoSelected) {
+    setActivoForm({
+      ...activoSelected,
+      fecha_compra: dayjs(activoSelected.fecha_compra),
+      fecha_ingreso: dayjs(activoSelected.fecha_ingreso),
+    });
+  }
+}, [activoSelected]);
 
   //Manejo de importes y monto
   //const [importe, setMonto] = useState(""); // Inicializa el estado con un valor numérico
@@ -131,6 +133,22 @@ export const AssetRegister = ({ handlerCloseForm }) => {
       ...activoForm,
       [name]: value,
     });
+  };
+
+  const onInputChangeCombo = (event, newValue, fieldName) => {
+    if (newValue) {
+      const newValueId = newValue[fieldName + "_id"]; // Obtener el ID del elemento seleccionado
+      setActivoForm({
+        ...activoForm,
+        [fieldName + "_id"]: newValueId,
+      });
+    } else {
+      // Si no se selecciona ningún elemento, establecer el ID del campo en vacío o null, según corresponda
+      setActivoForm({
+        ...activoForm,
+        [fieldName + "_id"]: null, // O establecer en vacío: ""
+      });
+    }
   };
 
   const handleFechaChange = (date, campo) => {
@@ -154,21 +172,21 @@ export const AssetRegister = ({ handlerCloseForm }) => {
   };
 
   const manejarCambioImagen = (e) => {
-    const archivoImagen = e.target.files[0];
-    //setImagen(archivoImagen);
-    console.log(archivoImagen);
+    const archivo = e.target.files[0];
     setActivoForm({
       ...activoForm,
-      imagen: archivoImagen,
+      imagen: archivo,
+      foto: archivo.name,
     });
+    console.log(activoForm);
   };
 
   const manejarCambioDocumento = (e) => {
     const archivo = e.target.files[0];
-    console.log(archivo);
     setActivoForm({
       ...activoForm,
       doc: archivo,
+      documento: archivo.name,
     });
     console.log(activoForm);
   };
@@ -236,7 +254,6 @@ export const AssetRegister = ({ handlerCloseForm }) => {
     obtenerFabricantes();
   }, []);
   const Clasificaciones = ["PROPIOS", "ARRENDADOS"];
-
   const [proveedores, setProveedores] = useState([""]);
   const [gruposActivos, setGruposActivos] = useState([""]);
   const [fabricantes, setFabricantes] = useState([""]);
@@ -244,17 +261,27 @@ export const AssetRegister = ({ handlerCloseForm }) => {
   const handleSubmit = async (event) => {
     event.preventDefault();
     // Imprimir información de activoForm en la consola
-    console.log("Información de activoForm:", activoForm);
     if (!fecha_compra || !fecha_ingreso) {
       setAlertaAbierta(true);
-      //console.error("Por favor, completa todos los campos obligatorios.");
-
       return;
     }
 
-    console.error("Por favor, enviando form", activoForm);
-    //return;
+      // Si no se ha seleccionado un nuevo archivo de imagen, mantener los datos actuales
+  if (!activoForm.foto) {
+    setActivoForm({ ...activoForm, imagen: activoSelected.foto });
+  }
+
+  // Si no se ha seleccionado un nuevo archivo de documento, mantener los datos actuales
+  if (!activoForm.documento) {
+    setActivoForm({ ...activoForm, doc: activoSelected.documento });
+  }
+  console.log("Información de activoForm:", activoForm);
+
+    // console.error("Por favor, enviando form", activoForm);
     handlerAddActivo(activoForm);
+
+    // Limpiar los valores del formulario después del envío
+    setActivoForm(initialActivoForm);
   };
 
   const onCloseForm = () => {
@@ -319,8 +346,30 @@ export const AssetRegister = ({ handlerCloseForm }) => {
                 onChange={onInputChange}
               />
             </Grid>
-
-            <Grid item xs={4}>
+            <Grid item xs={12} md={4} >
+              <Autocomplete
+                id="combo-box-fabricantes"
+                options={fabricantes}
+                getOptionLabel={(option) => option?.nombre || ""}
+                style={{ width: "100%" }}
+                value={
+                  fabricantes.find(
+                    (fab) => fab.fabricante_id === fabricante_id
+                  ) || null
+                }
+                onChange={(event, newValue) =>
+                  onInputChangeCombo(event, newValue, "fabricante")
+                }
+                renderInput={(params) => (
+                  <TextField
+                    {...params}
+                    label="Fabricante/marca"
+                    variant="outlined"
+                  />
+                )}
+              />
+            </Grid>
+            {/* <Grid item xs={4}>
               <FormControl fullWidth required>
                 <InputLabel>Fabricante/Marca</InputLabel>
                 <Select
@@ -335,7 +384,7 @@ export const AssetRegister = ({ handlerCloseForm }) => {
                   ))}
                 </Select>
               </FormControl>
-            </Grid>
+            </Grid> */}
 
             <Grid item xs={4}>
               <TextField
@@ -361,35 +410,34 @@ export const AssetRegister = ({ handlerCloseForm }) => {
                 onChange={onInputChange}
               />
             </Grid>
-            <Grid item xs={4}>
-              <FormControl fullWidth required>
-                <InputLabel>Proveedor</InputLabel>
-                <Select
-                  value={proveedor_id}
-                  onChange={onInputChange}
-                  name="proveedor_id"
-                >
-                  {proveedores.map((option) => (
-                    <MenuItem
-                      key={option.proveedor_id}
-                      value={option.proveedor_id}
-                    >
-                      {option.nombre}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
+            <Grid item xs={12} md={4} >
+              <Autocomplete
+                id="combo-box-proveedor"
+                options={proveedores}
+                getOptionLabel={(option) => option?.nombre || ""}
+                style={{ width: "100%" }}
+                value={
+                  proveedores.find(
+                    (prov) => prov.proveedor_id === proveedor_id
+                  ) || null
+                }
+                onChange={(event, newValue) =>
+                  onInputChangeCombo(event, newValue, "proveedor")
+                }
+                renderInput={(params) => (
+                  <TextField
+                    {...params}
+                    label="Selecciona un proveedor"
+                    variant="outlined"
+                  />
+                )}
+              />
             </Grid>
+           
             <Grid item xs={12} sm={4}>
               <FormControl fullWidth required>
                 <InputLabel>Clasificacion</InputLabel>
-                {/* <Select value={clasificacion} onChange={onInputChange} name="clasificacion">
-                  {clasificacion.map((option) => (
-                    <MenuItem key={option.value} value={option.value}>
-                      {option.name}
-                    </MenuItem>
-                  ))}
-                </Select> */}
+                
                 <Select
                   value={clasificacion}
                   onChange={onInputChange}
@@ -404,36 +452,28 @@ export const AssetRegister = ({ handlerCloseForm }) => {
                 </Select>
               </FormControl>
             </Grid>
-            {/* <Grid item xs={12} sm={4}>
-              <FormControl fullWidth required>
-                <InputLabel>Estatus</InputLabel>
-                <Select value={estatus} onChange={onInputChange} name="estatus">
-                  {estatusVal.map((option) => (
-                    <MenuItem key={option.value} value={option.value}>
-                      {option.name}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
-            </Grid> */}
-            <Grid item xs={4}>
-              <FormControl fullWidth required>
-                <InputLabel>Grupo de Activo</InputLabel>
-                <Select
-                  value={grupoactivo_id}
-                  onChange={onInputChange}
-                  name="grupoactivo_id"
-                >
-                  {gruposActivos.map((option) => (
-                    <MenuItem
-                      key={option.grupoactivo_id}
-                      value={option.grupoactivo_id}
-                    >
-                      {option.nombre}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
+            <Grid item xs={12} md={4} >
+              <Autocomplete
+                id="combo-box-grupo"
+                options={gruposActivos}
+                getOptionLabel={(option) => option?.nombre || ""}
+                style={{ width: "100%" }}
+                value={
+                  gruposActivos.find(
+                    (op) => op.grupoactivo_id === grupoactivo_id
+                  ) || null
+                }
+                onChange={(event, newValue) =>
+                  onInputChangeCombo(event, newValue, "grupoactivo")
+                }
+                renderInput={(params) => (
+                  <TextField
+                    {...params}
+                    label="Grupo de Activos"
+                    variant="outlined"
+                  />
+                )}
+              />
             </Grid>
             <Grid item xs={12} sm={4}>
               <TextField
@@ -505,8 +545,9 @@ export const AssetRegister = ({ handlerCloseForm }) => {
                 />{" "}
               </LocalizationProvider>{" "}
             </Grid>
-            <Grid item xs={12} sm={4}>
-</Grid>
+            <Grid item xs={12} sm={4}></Grid>
+
+           
             <Grid item xs={12} sm={4}>
               <Button
                 component="label"
@@ -518,16 +559,18 @@ export const AssetRegister = ({ handlerCloseForm }) => {
                   flexDirection: "column",
                   alignItems: "center",
                   width: "100%", // Ajusta el ancho del Box al 100% de la columna
+                  fontSize: "9px",
+
                 }}
                 startIcon={<CloudUploadIcon />}
               >
-                cargar imagen
+                {foto ? foto : "Cargar imagen"}
                 <VisuallyHiddenInput
                   type="file"
                   accept="image/*"
                   //onChange={(e) => setImagen(e.target.files[0])}
                   onChange={manejarCambioImagen}
-                  required
+                  required={!foto}
                 />
               </Button>
               <Snackbar
@@ -548,15 +591,16 @@ export const AssetRegister = ({ handlerCloseForm }) => {
                   flexDirection: "column",
                   alignItems: "center",
                   width: "100%", // Ajusta el ancho del Box al 100% de la columna
+                  fontSize: "9px",
                 }}
                 startIcon={<NoteAddIcon />}
               >
-                CARGAR DOCUMENTO
+                {documento ? documento : "Cargar Documento"}
                 <VisuallyHiddenInput
                   type="file"
                   accept=".doc,.docx,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,.pdf,application/pdf"
                   onChange={manejarCambioDocumento}
-                  required
+                  required={!documento}
                 />
               </Button>
             </Grid>
@@ -571,6 +615,8 @@ export const AssetRegister = ({ handlerCloseForm }) => {
                   flexDirection: "column",
                   alignItems: "center",
                   width: "100%", // Ajusta el ancho del Box al 100% de la columna
+                  fontSize: "9px",
+
                 }}
                 startIcon={<SaveSharpIcon />}
               >

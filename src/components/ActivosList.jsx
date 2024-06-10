@@ -162,12 +162,12 @@ const generatePDF = () => {
               >
                 PROVEEDOR
               </TableCell>
-              {/* <TableCell
+              <TableCell
               style={{ color: "#fff", fontWeight: "bold" }}
               align="center"
             >
               EDITAR
-            </TableCell> */}
+            </TableCell>
               <TableCell
                 style={{ color: "#fff", fontWeight: "bold" }}
                 align="center"

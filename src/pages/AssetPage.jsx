@@ -30,8 +30,8 @@ import {
   People,
   RequestQuote,
 } from "@mui/icons-material";
-import dayjs from 'dayjs';
-dayjs.locale('es'); 
+import dayjs from "dayjs";
+dayjs.locale("es");
 
 function Copyright(props) {
   return (
@@ -60,46 +60,6 @@ const currencies = [
   },
 ];
 
-// const grupos = [
-//   {
-//     value: "MO",
-//     label: "Mobiiario",
-//   },
-//   {
-//     value: "MA",
-//     label: "Maquinaria",
-//   },
-//   {
-//     value: "T",
-//     label: "Transporte",
-//   },
-//   {
-//     value: "OF",
-//     label: "Equipo de oficina",
-//   },
-// ];
-
-// const proveedor = [
-//   {
-//     value: "p1",
-//     label: "Chevrolet Tamaulipas",
-//   },
-//   {
-//     value: "p2",
-//     label: "Nissan Mexico",
-//   },
-//   {
-//     value: "p3",
-//     label: "Toyota Monterrey",
-//   },
-//   {
-//     value: "p4",
-//     label: "Volswagen Tampico",
-//   },
-// ];
-
-// TODO remove, this demo shouldn't need to reset the theme.
-
 const defaultTheme = createTheme();
 
 //export default function BrandPage() {
@@ -110,6 +70,20 @@ export const AssetPage = () => {
     console.log({
       email: data.get("email"),
       password: data.get("password"),
+    });
+    // Limpia los valores del formulario después del envío
+    setFormValues({
+      Ubicacion: "",
+      Nombre: "",
+      Fabricante: "",
+      modelo: "",
+      noserie: "",
+      Clasificacion: "",
+      GrupoActivo: "MA",
+      lote: "",
+      Proveedor: "p1",
+      FechaCompra: null,
+      FechaInicioUso: null,
     });
   };
 
@@ -270,32 +244,19 @@ export const AssetPage = () => {
                   ))}
                 </TextField>
               </Grid>
-              <Grid item xs={2} >
+              <Grid item xs={2}>
                 <LocalizationProvider dateAdapter={AdapterDayjs}>
-                    
-                  <DatePicker             
-                  label="Fecha de Compra"
-                  fullWidth
- 
-                  />
+                  <DatePicker label="Fecha de Compra" fullWidth />
                 </LocalizationProvider>
               </Grid>
-              <Grid item xs={2} >
+              <Grid item xs={2}>
                 <LocalizationProvider dateAdapter={AdapterDayjs}>
-                  <DatePicker             
-                  label="Fecha de Inicio de Uso"
-                  fullWidth
-                  />
+                  <DatePicker label="Fecha de Inicio de Uso" fullWidth />
                 </LocalizationProvider>
               </Grid>
             </Grid>
 
-            <Button
-              type="submit"
-              
-              variant="contained"
-              sx={{ mt: 3, mb: 2 }}
-            >
+            <Button type="submit" variant="contained" sx={{ mt: 3, mb: 2 }}>
               Guardar
             </Button>
           </Box>
