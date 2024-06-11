@@ -31,7 +31,6 @@ export const useActivos = () => {
     try {
       const result = await findAllPages(page);
       console.log("login activos:",result);
-
       dispatch(loadingActivos(result.data));
     } catch (error) {
       if (error.response?.status == 401) {

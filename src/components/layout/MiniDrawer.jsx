@@ -11,13 +11,15 @@ import Divider from "@mui/material/Divider";
 import EngineeringIcon from "@mui/icons-material/Engineering";
 import HandymanIcon from "@mui/icons-material/Handyman";
 import EventRepeatIcon from "@mui/icons-material/EventRepeat";
+import EditNoteIcon from "@mui/icons-material/EditNote";
+import SupervisorAccountIcon from "@mui/icons-material/SupervisorAccount";
 import MenuIcon from "@mui/icons-material/Menu";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import MoveDownIcon from "@mui/icons-material/MoveDown";
 import ListItem from "@mui/material/ListItem";
 import ListItemIcon from "@mui/material/ListItemIcon";
-import ListIcon from '@mui/icons-material/List';
+import ListIcon from "@mui/icons-material/List";
 import ListItemText from "@mui/material/ListItemText";
 import ListAltIcon from "@mui/icons-material/ListAlt";
 import ExitToAppIcon from "@mui/icons-material/ExitToApp";
@@ -213,21 +215,23 @@ export const MiniDrawer = () => {
             </IconButton>
 
             {/* Logo en la AppBar */}
-            <Typography variant="h6" noWrap style={{ color: 'white' }}>
+            <Typography variant="h6" noWrap style={{ color: "white" }}>
               <img
                 src={Logo}
                 alt="Logo"
                 style={{ marginRight: "10px", height: "40px" }}
-                
               />
               Control de Activos
             </Typography>
 
             <div style={{ marginLeft: "auto" }}>
               {/* Agrega un icono de cierre de sesión en la AppBar */}
-              <IconButton style={{ color: 'white' }} onClick={handlerLogout}>
+              <IconButton style={{ color: "white" }} onClick={handlerLogout}>
                 <ExitToAppIcon />
-                <Typography variant="body1" style={{ marginLeft: "5px", color: "white" }} >
+                <Typography
+                  variant="body1"
+                  style={{ marginLeft: "5px", color: "white" }}
+                >
                   Cerrar Sesión
                 </Typography>
               </IconButton>
@@ -247,17 +251,27 @@ export const MiniDrawer = () => {
           <Divider sx={{ my: 0.5 }} />
 
           <List>
+
             <ListItem
               component={NavLink}
-              to="/activos"
+              to="/proveedores"
               className={classes.listItemHover}
             >
               <ListItemIcon>
-                <ListAltIcon color="primary" />
+                <SupervisorAccountIcon color="primary" />
               </ListItemIcon>
               <ListItemText
                 color="primary"
-                primary="Listado Activos"
+                primary="Proveedores"
+                primaryTypographyProps={{ style: { color: "#9AE6F0" } }} // Cambiar el color del texto
+              />
+            </ListItem>
+            <ListItem component={NavLink} to="/fabricantes">
+              <ListItemIcon>
+                <EditNoteIcon color="primary" />
+              </ListItemIcon>
+              <ListItemText
+                primary="Fabricantes/Marcas"
                 primaryTypographyProps={{ style: { color: "#9AE6F0" } }} // Cambiar el color del texto
               />
             </ListItem>
@@ -270,8 +284,21 @@ export const MiniDrawer = () => {
                 primaryTypographyProps={{ style: { color: "#9AE6F0" } }} // Cambiar el color del texto
               />
             </ListItem>
-
-            <ListItem component={NavLink} to="/AssetPage/register">
+            <ListItem
+              component={NavLink}
+              to="/activos"
+              className={classes.listItemHover}
+            >
+              <ListItemIcon>
+                <RequestQuote color="primary" />
+              </ListItemIcon>
+              <ListItemText
+                color="primary"
+                primary="Activos"
+                primaryTypographyProps={{ style: { color: "#9AE6F0" } }} // Cambiar el color del texto
+              />
+            </ListItem>
+            {/* <ListItem component={NavLink} to="/AssetPage/register">
               <ListItemIcon>
                 <RequestQuote color="primary" />
               </ListItemIcon>
@@ -279,8 +306,19 @@ export const MiniDrawer = () => {
                 primary="Activos"
                 primaryTypographyProps={{ style: { color: "#9AE6F0" } }} // Cambiar el color del texto
               />
-            </ListItem>
-            <ListItem component={NavLink} to="/AssignAsset/process">
+            </ListItem> */}
+
+
+            {/* <ListItem component={NavLink} to="/Proveedor/register">
+              <ListItemIcon>
+                <SupervisorAccountIcon color="primary" />
+              </ListItemIcon>
+              <ListItemText
+                primary="Proveedores"
+                primaryTypographyProps={{ style: { color: "#9AE6F0" } }} // Cambiar el color del texto
+              />
+            </ListItem> */}
+            {/* <ListItem component={NavLink} to="/AssignAsset/process">
               <ListItemIcon>
                 <EngineeringIcon color="primary" />
               </ListItemIcon>
@@ -288,17 +326,16 @@ export const MiniDrawer = () => {
                 primary="Movimientos"
                 primaryTypographyProps={{ style: { color: "#9AE6F0" } }} // Cambiar el color del texto
               />
-            </ListItem>
+            </ListItem> */}
             {/* <ListItem component={NavLink} to="/MaintenanceAsset/process"> */}
             <ListItem component={NavLink} to="/movimientos">
               <ListItemIcon>
-                <ListIcon color="primary" />
+                <EngineeringIcon color="primary" />
                 {/* <HandymanIcon color="primary" /> */}
               </ListItemIcon>
               <ListItemText
                 // primary="Mantenimiento"
-                                primary="Lista de Movimientos"
-
+                primary="Movimiento de activo"
                 primaryTypographyProps={{ style: { color: "#9AE6F0" } }} // Cambiar el color del texto
               />
             </ListItem>
@@ -308,7 +345,7 @@ export const MiniDrawer = () => {
               </ListItemIcon>
               <ListItemText primary="Baja de Activos" />
             </ListItem> */}
-            <ListItem component={NavLink} to="/AssetGroup/register">
+            {/* <ListItem component={NavLink} to="/AssetGroup/register">
               <ListItemIcon>
                 <AccountTree color="primary" />
               </ListItemIcon>
@@ -316,7 +353,7 @@ export const MiniDrawer = () => {
                 primary="Grupo de Activos"
                 primaryTypographyProps={{ style: { color: "#9AE6F0" } }} // Cambiar el color del texto
               />
-            </ListItem>
+            </ListItem> */}
 
             <ListItem component={NavLink} to="/users">
               <ListItemIcon>
@@ -327,7 +364,7 @@ export const MiniDrawer = () => {
                 primaryTypographyProps={{ style: { color: "#9AE6F0" } }} // Cambiar el color del texto
               />
             </ListItem>
-            <ListItem component={NavLink} to="/Personal/Table">
+            {/* <ListItem component={NavLink} to="/Personal/Table">
               <ListItemIcon>
                 <QuizIcon color="primary" />
               </ListItemIcon>
@@ -335,12 +372,6 @@ export const MiniDrawer = () => {
                 primary="Lista de Activos"
                 primaryTypographyProps={{ style: { color: "#9AE6F0" } }} // Cambiar el color del texto
               />
-            </ListItem>
-            {/* <ListItem component={NavLink} to="/activos/Ejemplo">
-              <ListItemIcon>
-                <HandymanIcon color="primary" />
-              </ListItemIcon>
-              <ListItemText primary="formularios de prueba" />
             </ListItem> */}
           </List>
 
@@ -351,8 +382,10 @@ export const MiniDrawer = () => {
               <ListItemIcon>
                 <AccountCircle color="primary" />
               </ListItemIcon>
-              <ListItemText primary={login.user?.username?.toUpperCase()}                 primaryTypographyProps={{ style: { color: "#9AE6F0" } }} // Cambiar el color del texto
-/>
+              <ListItemText
+                primary={login.user?.username?.toUpperCase()}
+                primaryTypographyProps={{ style: { color: "#9AE6F0" } }} // Cambiar el color del texto
+              />
             </ListItem>
           </List>
         </Drawer>

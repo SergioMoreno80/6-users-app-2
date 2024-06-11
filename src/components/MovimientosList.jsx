@@ -15,6 +15,9 @@ import laptop from "../images/laptop.jpeg"; // Ajusta la ruta a tu imagen de log
 import konica from "../images/konica.jpeg"; // Ajusta la ruta a tu imagen de logotipo
 import pc from "../images/pc escritorio.webp"; // Ajusta la ruta a tu imagen de logotipo
 import chevy from "../images/chevrolet.jpeg"; // Ajusta la ruta a tu imagen de logotipo
+import AddIcon from "@mui/icons-material/Add";
+import { NavLink } from "react-router-dom"; // Importa NavLink
+import PictureAsPdfIcon from "@mui/icons-material/PictureAsPdf";
 import {
   Table,
   TableBody,
@@ -24,7 +27,7 @@ import {
   TableRow,
   Paper,
   Button,
-  TextField,
+  TextField, Fab
 } from "@mui/material";
 
 export const MovimientosList = () => {
@@ -62,6 +65,29 @@ export const MovimientosList = () => {
       margin="normal"
       sx={{ maxWidth: "400px" }}
     />
+     {/* Botón para descargar PDF */}
+     {/* <Fab
+          aria-label="download"
+          onClick={generatePDF}
+          style={{ 
+            marginLeft: "10px", 
+            marginTop: "25px",
+            backgroundColor: "#d32f2f", // Cambia el color aquí
+            color: "#fff" // Color del icono
+          }}
+        >
+          <PictureAsPdfIcon />
+        </Fab> */}
+        {/* Botón para abrir el formulario de registro */}
+        <NavLink to="/AssignAsset/process">
+          <Fab
+            color="primary"
+            aria-label="add"
+            style={{ marginLeft: "10px", marginTop: "25px" }}
+          >
+            <AddIcon />
+          </Fab>
+        </NavLink>
 
     <TableContainer
       component={Paper}

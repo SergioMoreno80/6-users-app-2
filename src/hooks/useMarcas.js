@@ -1,33 +1,33 @@
 import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
-import { findAll, save, update } from "../services/proveedorService";
+import { findAll, save, update } from "../services/marcasService";
 import { useDispatch, useSelector } from "react-redux";
 import { 
     initialForm,
-    addProveedor,
-    removeProveedor,
-    updateProveedor,
-    loadingData,
-    onSelectedForm,
-    onOpenForm,
-    onCloseForm,
-    loadingError,} from "../store/slices/proveedores/proveedorSlice";
+    addFabricante,
+  removeFabricante,
+  updateFabricante,
+  loadingData,
+  onSelectedForm,
+  onOpenForm,
+  onCloseForm,
+    loadingError,} from "../store/slices/marcas/marcasSlice";
 
 import { useAuth } from "../auth/hooks/useAuth";
 
-export const useProveedores = () => {
+export const useMarcas = () => {
     
-    const { proveedor, proveedorSelected, visibleForm, errors, isLoading, paginator } = useSelector(state => state.proveedor);
+    const { fabricantes, fabricanteSelected, visibleForm, errors, isLoading, paginator } = useSelector(state => state.fabricantes);
     const dispatch = useDispatch();
 
     const navigate = useNavigate();
 
     const { login, handlerLogout } = useAuth();
 
-    const getProveedor = async (page = 0) => {
+    const getFabricante = async (page = 0) => {
         try {
           const result = await findAll(page);
-          console.log("login proveedor:",result);
+          console.log("login fabricante:",result);
     
           dispatch(loadingData(result.data));
         } catch (error) {
@@ -37,33 +37,33 @@ export const useProveedores = () => {
         }
       };
 
-    const handlerAddProveedor = async (prov) => {
-        // console.log(proveedor);
+    const handlerAddFabricante = async (fab) => {
+        // console.log(fab);
 
         if (!login.isAdmin) return;
+
         let response;
         try {
 
-            if (prov.proveedor_id === 0) {
-            console.log(prov);
-                response = await save(prov);
-                dispatch(addProveedor(response.data))
+            if (fab.fabricante_id === 0) {
+                response = await save(fab);
+                dispatch(addFabricante(response.data))
             } else {
-                response = await update(prov);
-                dispatch(updateProveedor(response.data));
+                response = await update(fab);
+                dispatch(updateFabricante(response.data));
             }
 
             Swal.fire(
-                (prov.proveedor_id === 0) ?
-                    'proveedor Creado' :
-                    'proveedor Actualizado',
-                (prov.proveedor_id === 0) ?
-                    'El proveedor ha sido creado con exito!' :
-                    'El proveedor ha sido actualizado con exito!',
+                (fab.fabricante_id === 0) ?
+                    'Fabricante Creado' :
+                    'Fabricante Actualizado',
+                (fab.fabricante_id === 0) ?
+                    'El Fabricante ha sido creado con exito!' :
+                    'El Fabricante ha sido actualizado con exito!',
                 'success'
             );
             handlerCloseForm();
-            navigate('/proveedores');
+            navigate('/fabricantes');
         } catch (error) {
             if (error.response && error.response.status == 400) {
                 dispatch(loadingError(error.response.data));
@@ -82,14 +82,14 @@ export const useProveedores = () => {
         }
     }
 
-    const handlerRemoveProveedor = (id) => {
+    const handlerRemoveFabricante = (id) => {
         // console.log(id);
 
         if (!login.isAdmin) return;
 
         Swal.fire({
             title: 'Esta seguro que desea eliminar?',
-            text: "Cuidado el proveedor sera eliminado!",
+            text: "Cuidado el fabricante sera eliminado!",
             icon: 'warning',
             showCancelButton: true,
             confirmButtonColor: '#3085d6',
@@ -101,11 +101,11 @@ export const useProveedores = () => {
                 try {
                     await remove(id);
 
-                    dispatch(removeProveedor(id));
+                    dispatch(removeFabricante(id));
 
                     Swal.fire(
-                        'Proveedor Eliminado!',
-                        'El proveedor ha sido eliminado con exito!',
+                        'Fabricante Eliminado!',
+                        'El Fabricante ha sido eliminado con exito!',
                         'success'
                     );
                 } catch (error) {
@@ -118,7 +118,7 @@ export const useProveedores = () => {
 
     }
 
-    const handlerProveedorSelectedForm = (prov) => {
+    const handlerFabricanteSelectedForm = (prov) => {
         dispatch(onSelectedForm({ ...prov }));
     }
 
@@ -131,18 +131,18 @@ export const useProveedores = () => {
         dispatch(loadingError({}));
     }
     return {
-        proveedor,
-        proveedorSelected,
+        fabricantes,
+        fabricanteSelected,
         initialForm,
         visibleForm,
         errors,
         isLoading,
         paginator,
-        handlerAddProveedor,
-        handlerRemoveProveedor,
-        handlerProveedorSelectedForm,
+        handlerAddFabricante,
+        handlerRemoveFabricante,
+        handlerFabricanteSelectedForm,
         handlerOpenForm,
         handlerCloseForm,
-        getProveedor,
+        getFabricante,
         }
 }

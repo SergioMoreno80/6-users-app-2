@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { UserModalForm } from "../components/UserModalForm";
-import { FabricantesList } from "../components/FabricantesList";
+import { ProveedoresList } from "../components/ProveedoresList";
 import React, { useState } from "react";
 import { useAuth } from "../auth/hooks/useAuth";
 import { useParams } from "react-router-dom";
@@ -13,18 +13,18 @@ import {
 } from "@mui/material";
 import jsPDF from "jspdf";
 import "jspdf-autotable";
-import { useMarcas } from "../hooks/useMarcas";
-export const BrandPage = () => {
+import { useProveedores } from "../hooks/useProveedores";
+export const ProveedoresPage = () => {
   const { page } = useParams();
   const {
-    fabricantes,
+    proveedor,
     visibleForm,
     isLoading,
     paginator,
     handlerOpenForm,
-    getFabricante,
-    fabricanteSelected,
-  } = useMarcas();
+    getProveedor,
+    proveedorSelected,
+  } = useProveedores();
   const { login } = useAuth();
   const apiUrl = import.meta.env.VITE_IMAGE_BASE_URL;
   // useEffect(() => {
@@ -32,7 +32,7 @@ export const BrandPage = () => {
   // }, [, page]);
   useEffect(() => {
     // Elimina 'page' de los parámetros de la función getActivos
-    getFabricante();
+    getProveedor();
   }, []);
   const generatePDF = () => {
     if (isLoading) return; // Evita la generación del PDF mientras se carga
@@ -51,7 +51,7 @@ export const BrandPage = () => {
       pdf.addImage(image1, "JPEG", imageX, imageY, imageWidth, imageHeight);
 
       // Información del activo
-      const title = "Kardex del fabricante";
+      const title = "Kardex del proveedor";
       const titleWidth =
         (pdf.getStringUnitWidth(title) * pdf.internal.getFontSize()) /
         pdf.internal.scaleFactor;
@@ -90,10 +90,10 @@ export const BrandPage = () => {
         body: movimientoData,
       });
 
-      pdf.save("fabricante_y_movimientos.pdf");
+      pdf.save("proveedor_y_movimientos.pdf");
     };
     //image1.src = "http://ec2-3-141-190-125.us-east-2.compute.amazonaws.com:8080/imagenes/" + activoSelected.foto;
-    image1.src = `${apiUrl}/` + fabricanteSelected.foto;
+    image1.src = `${apiUrl}/` + proveedorSelected.foto;
 
   };
   if (isLoading) {
@@ -108,16 +108,16 @@ export const BrandPage = () => {
       {!visibleForm || <UserModalForm />}
       
       <div className="container my-4 text-center">
-        <h2>Listado de fabricantes</h2>
+        <h2>Listado de proveedores</h2>
         <div className="row">
           <div className="col">
-            {fabricantes.length === 0 ? (
+            {proveedor.length === 0 ? (
               <div className="alert alert-warning">
-                No hay fabricantes en el sistema!
+                No hay proveedores en el sistema!
               </div>
             ) : (
               <>
-                <FabricantesList />
+                <ProveedoresList />
                 {/* <PaginatorA url="/activos/page" paginator={paginator}
                   /> */}
               </>

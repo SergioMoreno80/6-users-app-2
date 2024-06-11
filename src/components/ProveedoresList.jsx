@@ -1,5 +1,4 @@
-import { ActivoRow } from "./ActivoRow";
-import { useActivos } from "../hooks/useActivos";
+import { ProveedorRow } from "./ProveedorRow";
 import { useAuth } from "../auth/hooks/useAuth";
 import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
@@ -7,6 +6,8 @@ import Box from "@mui/material/Box";
 import Collapse from "@mui/material/Collapse";
 import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
+import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
+import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import MenuIcon from "@mui/icons-material/Menu";
 import jsPDF from "jspdf";
 import "jspdf-autotable";
@@ -27,33 +28,37 @@ import {
   TextField,
   Fab,
 } from "@mui/material";
+import { useProveedores } from "../hooks/useProveedores";
 
-export const ActivosList = () => {
+export const ProveedoresList = () => {
   const [isTableExpanded, setTableExpanded] = useState(true);
 
   const toggleTableSize = () => {
     setTableExpanded(!isTableExpanded);
   };
-  const { activos } = useActivos();
+  const { proveedor } = useProveedores();
   const [searchTerm, setSearchTerm] = useState("");
   const { login } = useAuth();
-  const searchColumns = ["nombre", "proveedor", "factura"]; // Columnas en las que se realizará la búsqueda
+  const searchColumns = ["nombre", "descripcion"]; // Columnas en las que se realizará la búsqueda
 
   const handleSearchTermChange = (event) => {
     console.log("", event.target.value);
     setSearchTerm(event.target.value);
   };
 
-  const filteredActivos = activos.filter((activo) =>
+  const filteredProveedores = proveedor.filter((proveedor) =>
     searchColumns.some((column) =>
-      activo[column].toString().toLowerCase().includes(searchTerm.toLowerCase())
+      proveedor[column]
+        .toString()
+        .toLowerCase()
+        .includes(searchTerm.toLowerCase())
     )
   );
 
   const generatePDF = () => {
     const pdf = new jsPDF();
 
-    const rows = filteredActivos.map((activo) => {
+    const rows = filteredProveedores.map((activo) => {
       let barcodeData;
       try {
         const canvas = document.createElement("canvas");
@@ -103,7 +108,7 @@ export const ActivosList = () => {
     <div style={{ margin: "20px", maxHeight: "700px", overflow: "auto" }}>
       <div style={{ marginBottom: "10px", marginTop: "10px" }}>
         <TextField
-          label="Buscar activo"
+          label="Buscar Proveedor"
           variant="outlined"
           value={searchTerm}
           onChange={handleSearchTermChange}
@@ -111,29 +116,21 @@ export const ActivosList = () => {
           margin="normal"
           sx={{ maxWidth: "400px" }}
         />
-        {/* <Button
-        variant="contained"
-        color="primary"
-        onClick={generatePDF}
-        style={{ marginLeft: "10px", marginTop: "25px" }}
-      >
-        Descargar PDF
-      </Button> */}
         {/* Botón para descargar PDF */}
-        <Fab
+        {/* <Fab
           aria-label="download"
           onClick={generatePDF}
-          style={{
-            marginLeft: "10px",
+          style={{ 
+            marginLeft: "10px", 
             marginTop: "25px",
             backgroundColor: "#d32f2f", // Cambia el color aquí
-            color: "#fff", // Color del icono
+            color: "#fff" // Color del icono
           }}
         >
           <PictureAsPdfIcon />
-        </Fab>
+        </Fab> */}
         {/* Botón para abrir el formulario de registro */}
-        <NavLink to="/AssetPage/register">
+        <NavLink to="/Proveedor/register">
           <Fab
             color="primary"
             aria-label="add"
@@ -156,50 +153,32 @@ export const ActivosList = () => {
         <Table aria-label="collapsible table">
           <TableHead style={{ backgroundColor: "#000" }}>
             <TableRow>
-              <TableCell
+              {/* <TableCell
                 style={{ color: "#fff", fontWeight: "bold" }}
                 align="center"
               >
                 IMG
-              </TableCell>
-              <TableCell
-                style={{ color: "#fff", fontWeight: "bold" }}
-                align="center"
-              >
+              </TableCell> */}
+              {/* <TableCell style={{ color: "#fff", fontWeight: "bold" }} align="center">
                 CODIGO
               </TableCell>
-              <TableCell
-                style={{ color: "#fff", fontWeight: "bold" }}
-                align="center"
-              >
+              <TableCell style={{ color: "#fff", fontWeight: "bold" }} align="center">
                 CODIGO DE BARRAS
-              </TableCell>
+              </TableCell> */}
               <TableCell style={{ color: "#fff", fontWeight: "bold" }}>
                 NOMBRE
               </TableCell>
               <TableCell
                 style={{ color: "#fff", fontWeight: "bold" }}
-                align="center"
+                align="left"
               >
-                FACTURA
+                DESCRIPCION
               </TableCell>
               <TableCell
                 style={{ color: "#fff", fontWeight: "bold" }}
                 align="center"
               >
-                FECHA DE COMPRA
-              </TableCell>
-              <TableCell
-                style={{ color: "#fff", fontWeight: "bold" }}
-                align="center"
-              >
-                COSTO
-              </TableCell>
-              <TableCell
-                style={{ color: "#fff", fontWeight: "bold" }}
-                align="center"
-              >
-                PROVEEDOR
+                ESTATUS
               </TableCell>
               <TableCell
                 style={{ color: "#fff", fontWeight: "bold" }}
@@ -207,61 +186,26 @@ export const ActivosList = () => {
               >
                 EDITAR
               </TableCell>
-              <TableCell
+              {/* <TableCell
                 style={{ color: "#fff", fontWeight: "bold" }}
                 align="center"
               >
                 ELIMINAR
-              </TableCell>
-              <TableCell
+              </TableCell> */}
+              {/* <TableCell
                 style={{ color: "#fff", fontWeight: "bold" }}
                 align="center"
               >
                 PDF
-              </TableCell>
+              </TableCell> */}
             </TableRow>
           </TableHead>
 
           <TableBody>
-            {filteredActivos.map((activo) => (
-              <ActivoRow key={activo.activo_id} {...activo} />
+            {filteredProveedores.map((proveedor) => (
+              <ProveedorRow key={proveedor.proveedor_id} {...proveedor} />
             ))}
           </TableBody>
-          {/* <TableBody>
-           
-            {activos.map(
-              ({
-                activo_id,
-                nombre,
-                descripcion,
-                factura,
-                fecha_compra,
-                no_serie,
-                modelo,
-                importe,
-                proveedor_id,
-                estatus,
-                foto,
-                proveedor,
-              }) => (
-                <ActivoRow
-                  key={activo_id}
-                  id={activo_id}
-                  nombre={nombre}
-                  descripcion={descripcion}
-                  factura={factura}
-                  fecha_compra={fecha_compra}
-                  no_serie={no_serie}
-                  modelo={modelo}
-                  importe={importe}
-                  proveedor_id={proveedor_id}
-                  estatus={estatus}
-                  foto={foto}
-                  proveedor={proveedor}
-                />
-              )
-            )}
-          </TableBody> */}
         </Table>
         <IconButton
           onClick={toggleTableSize}
