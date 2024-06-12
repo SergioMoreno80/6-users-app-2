@@ -38,7 +38,17 @@ export const Kardex = () => {
   }, [id, activos]);
 
   const apiUrl = import.meta.env.VITE_IMAGE_BASE_URL;
-
+  const getFormattedDateTime = () => {
+    const now = new Date();
+    const year = now.getFullYear();
+    const month = String(now.getMonth() + 1).padStart(2, '0');
+    const day = String(now.getDate()).padStart(2, '0');
+    const hours = String(now.getHours()).padStart(2, '0');
+    const minutes = String(now.getMinutes()).padStart(2, '0');
+    const seconds = String(now.getSeconds()).padStart(2, '0');
+    
+    return `${year}-${month}-${day}_${hours}-${minutes}-${seconds}`;
+  };
   const generatePDF = () => {
     if (isLoading) return; // Evita la generación del PDF mientras se carga
 
@@ -76,23 +86,64 @@ export const Kardex = () => {
         barcodeWidth,
         barcodeHeight
       );
+      const title = "Kardex del activo";
+      const titleWidth =
+        (pdf.getStringUnitWidth(title) * pdf.internal.getFontSize()) /
+        pdf.internal.scaleFactor;
+      const titleX = (pageWidth - titleWidth) / 2;
+      const titleY = imageY + imageHeight + 20;
+      pdf.setFontSize(18);
+      //pdf.text(title, titleX, titleY);
+      // Información del activo (tabla)
+      const tableX = 10; // Ajusta la posición X de la tabla según sea necesario
+      const tableY = titleY + 10; // Espacio entre el título y la tabla
+      pdf.autoTable({
+        startY: titleY + 30,
+        head: [["Campos", "Informacion"]],
+        body: activoInfo,
+        margin: { top: tableY }
+      });
 
+      // Información de los movimientos
+      pdf.addPage(); // Añadir una nueva página para los movimientos
+      const movimientosTitle = "Movimientos";
+      const movimientosTitleWidth =
+        (pdf.getStringUnitWidth(movimientosTitle) *
+          pdf.internal.getFontSize()) /
+        pdf.internal.scaleFactor;
+      const movimientosTitleX = (pageWidth - movimientosTitleWidth) / 2;
+      pdf.setFontSize(18);
+      pdf.text(movimientosTitle, movimientosTitleX, 20);
+      pdf.autoTable({
+        startY: 30,
+        head: [
+          [
+            "Tipo",
+            "Fecha",
+            "Descripcion",
+            "Sucursal",
+            "Departamento",
+            "Usuario",
+          ],
+        ],
+        body: movimientoData,
+      });
       const formattedDateTime = getFormattedDateTime();
       const fileName = `activo_y_movimientos_${formattedDateTime}.pdf`;
       pdf.save(fileName);
     };
-    image1.src =  apiUrl + "/"+ activoSelected.foto;
+    image1.src = apiUrl + "/" + activoSelected.foto;
   };
 
   const formatDate = (dateString) => {
-    if (!dateString) return ""; 
+    if (!dateString) return "";
     const date = new Date(dateString);
     const formattedDate = date.toLocaleDateString();
     return formattedDate;
   };
 
   const formatCurrency = (amount) => {
-    if (!amount) return ""; 
+    if (!amount) return "";
     return new Intl.NumberFormat("es-MX", {
       style: "currency",
       currency: "MXN",
@@ -108,6 +159,15 @@ export const Kardex = () => {
     ["Fecha de Compra", formatDate(activoSelected.fecha_compra)],
     ["Costo", formatCurrency(activoSelected.importe)],
   ];
+
+  const movimientoData = movimientos.map((movimiento) => [
+    movimiento.tipo_movimiento,
+    formatDate(movimiento.fecha_movimiento),
+    movimiento.descripcion,
+    movimiento.sucursales?.nombre,
+    movimiento.departamentos?.nombre,
+    movimiento.empleado?.nombre,
+  ]);
 
   if (isLoading) {
     return (
