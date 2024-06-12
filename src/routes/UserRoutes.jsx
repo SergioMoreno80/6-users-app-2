@@ -11,8 +11,6 @@ import { UsersPage } from "../pages/UsersPage";
 import { ActivosPage } from "../pages/ActivosPage";
 import { MovimientosPage } from "../pages/MovimientosPage";
 import { useSelector } from "react-redux";
-import { Personal } from "../pages/Personal";
-
 import { AssignAsset } from "../pages/AssignAsset";
 import { LendAsset } from "../pages/LendAsset";
 import { MaintenanceAsset } from "../pages/MaintenanceAsset";
@@ -46,7 +44,6 @@ export const UserRoutes = () => {
         <Route path="AssetType/register" element={<AssetType />} />
         {/* <Route path="AssetPage/register" element={<AssetPage />} /> */}
         <Route path="AssetList" element={<AssetList />} />
-        <Route path="Personal/Table" element={<Personal />} />
         <Route path="AssignAsset/process" element={<AssignAsset />} />
         {/* <Route path="LendAsset/process" element={<LendAsset />} /> */}
         <Route path="MaintenanceAsset/process" element={<MaintenanceAsset />} />

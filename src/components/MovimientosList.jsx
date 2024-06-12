@@ -10,11 +10,6 @@ import Typography from "@mui/material/Typography";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import MenuIcon from "@mui/icons-material/Menu";
-import estantes from "../images/estantes.jpeg"; // Ajusta la ruta a tu imagen de logotipo
-import laptop from "../images/laptop.jpeg"; // Ajusta la ruta a tu imagen de logotipo
-import konica from "../images/konica.jpeg"; // Ajusta la ruta a tu imagen de logotipo
-import pc from "../images/pc escritorio.webp"; // Ajusta la ruta a tu imagen de logotipo
-import chevy from "../images/chevrolet.jpeg"; // Ajusta la ruta a tu imagen de logotipo
 import AddIcon from "@mui/icons-material/Add";
 import { NavLink } from "react-router-dom"; // Importa NavLink
 import PictureAsPdfIcon from "@mui/icons-material/PictureAsPdf";

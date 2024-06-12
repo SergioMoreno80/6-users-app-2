@@ -100,12 +100,12 @@ export const movimientosSlice = createSlice({
       state.isLoading = false;
     },
     loadingData: (state, { payload }) => {
-      // console.log('loadingData mov', payload); // Agregar un console.log() para imprimir los datos de payload
+      console.log('loadingData mov Slice', payload); // Agregar un console.log() para imprimir los datos de payload
       state.movimientos = payload;
       state.isLoading = false;
     },
     loadingDatabyActivo: (state, { payload }) => {
-      // console.log('loadingData mov', payload); // Agregar un console.log() para imprimir los datos de payload
+       console.log('loadingData ByActivo Slice', payload); // Agregar un console.log() para imprimir los datos de payload
       state.movimientos = payload;
       state.isLoading = false;
     },

@@ -227,41 +227,7 @@ export const ActivosList = () => {
               <ActivoRow key={activo.activo_id} {...activo} />
             ))}
           </TableBody>
-          {/* <TableBody>
-           
-            {activos.map(
-              ({
-                activo_id,
-                nombre,
-                descripcion,
-                factura,
-                fecha_compra,
-                no_serie,
-                modelo,
-                importe,
-                proveedor_id,
-                estatus,
-                foto,
-                proveedor,
-              }) => (
-                <ActivoRow
-                  key={activo_id}
-                  id={activo_id}
-                  nombre={nombre}
-                  descripcion={descripcion}
-                  factura={factura}
-                  fecha_compra={fecha_compra}
-                  no_serie={no_serie}
-                  modelo={modelo}
-                  importe={importe}
-                  proveedor_id={proveedor_id}
-                  estatus={estatus}
-                  foto={foto}
-                  proveedor={proveedor}
-                />
-              )
-            )}
-          </TableBody> */}
+          
         </Table>
         <IconButton
           onClick={toggleTableSize}

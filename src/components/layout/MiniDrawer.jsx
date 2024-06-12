@@ -364,15 +364,6 @@ export const MiniDrawer = () => {
                 primaryTypographyProps={{ style: { color: "#9AE6F0" } }} // Cambiar el color del texto
               />
             </ListItem>
-            {/* <ListItem component={NavLink} to="/Personal/Table">
-              <ListItemIcon>
-                <QuizIcon color="primary" />
-              </ListItemIcon>
-              <ListItemText
-                primary="Lista de Activos"
-                primaryTypographyProps={{ style: { color: "#9AE6F0" } }} // Cambiar el color del texto
-              />
-            </ListItem> */}
           </List>
 
           <Divider sx={{ my: 0.5 }} />

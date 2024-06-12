@@ -59,8 +59,8 @@ export const useMovimientos = () => {
   const getListByActivo = async (activoId) => {
     try {
       const result = await findByActivoId(activoId);
-      console.log("Lista de movimientos por activo - :", result.data); 
-      dispatch(loadingDatabyActivo(result.data));
+      console.log("Lista de movimientos por activo UseMov :", result); 
+      dispatch(loadingDatabyActivo(result));
     } catch (error) {
       if (error.response?.status == 401) {
         handlerLogout();
@@ -105,8 +105,8 @@ export const useMovimientos = () => {
         "success"
       );
       handlerCloseForm();
-      console.error("voy a entrar a navigate");
-      navigate("/AssignAsset/process");
+      // console.error("voy a entrar a navigate");
+      navigate("/movimientos");
     } catch (error) {
       if (error.response && error.response.status == 400) {
         dispatch(loadingError(error.response.data));
