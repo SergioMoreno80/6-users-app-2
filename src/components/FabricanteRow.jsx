@@ -27,7 +27,6 @@ import {
   Paper,
   Button,
 } from "@mui/material";
-import pc from "../images/pc escritorio.webp"; // Ajusta la ruta a tu imagen de logotipo
 import { useMarcas } from "../hooks/useMarcas";
 
 export const FabricanteRow = ({

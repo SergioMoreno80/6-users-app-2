@@ -1,8 +1,6 @@
 import { NavLink } from "react-router-dom";
 import { useActivos } from "../hooks/useActivos";
 import { useAuth } from "../auth/hooks/useAuth";
-import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
-import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import PropTypes from "prop-types";
 import Box from "@mui/material/Box";
 import Collapse from "@mui/material/Collapse";
@@ -27,7 +25,6 @@ import {
   Paper,
   Button,
 } from "@mui/material";
-import pc from "../images/pc escritorio.webp"; // Ajusta la ruta a tu imagen de logotipo
 
 export const ActivoRow = ({
   imagen,
