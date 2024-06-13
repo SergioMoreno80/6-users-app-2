@@ -37,10 +37,9 @@ export const ActivosList = () => {
   const { activos } = useActivos();
   const [searchTerm, setSearchTerm] = useState("");
   const { login } = useAuth();
-  const searchColumns = ["nombre", "proveedor", "factura"]; // Columnas en las que se realizará la búsqueda
+  const searchColumns = ["nombre", "proveedor", "factura", "grupoactivo", "no_serie"]; // Columnas en las que se realizará la búsqueda
 
   const handleSearchTermChange = (event) => {
-    console.log("", event.target.value);
     setSearchTerm(event.target.value);
   };
 
@@ -52,7 +51,7 @@ export const ActivosList = () => {
 
   const generatePDF = () => {
     const pdf = new jsPDF();
-
+  
     const rows = filteredActivos.map((activo) => {
       let barcodeData;
       try {
@@ -63,41 +62,53 @@ export const ActivosList = () => {
         console.error("Error al generar el código de barras:", error);
         barcodeData = ""; // Si hay un error, dejar el código de barras en blanco
       }
-
+  
       return [
-        activo.clave_busqueda,
-        activo.descripcion,
-        { data: barcodeData, width: 100, height: 40 },
+        activo.nombre,
+        activo.no_serie,
+        activo.grupoactivo,
+        { content: '', image: barcodeData, width: 100, height: 40 }, // Inicializar correctamente la celda de la imagen
       ];
     });
-
+  
     pdf.autoTable({
-      head: [["Código de Barras", "Descripción", ""]], // Encabezado de la tabla
+      head: [["Nombre", "No. Serie", "Grupo", "Codigo"]], // Encabezado de la tabla
       body: rows, // Cuerpo de la tabla
       didDrawCell: (data) => {
         // Verificar si es la celda de la imagen y renderizar la imagen correctamente
+        
         if (
-          data.column.index === 2 &&
-          typeof data.cell.raw === "object" &&
-          data.cell.raw.data
+          data.column.index === 3 &&
+          data.cell.raw &&
+          data.cell.raw.image
         ) {
           const { x, y, width, height } = data.cell;
           pdf.addImage(
-            data.cell.raw.data,
-            "JPEG",
+            data.cell.raw.image,
+            "PNG",
             x + 2,
             y + 2,
             width - 4,
             height - 4
           );
+          data.cell.text = ''; // Asegurarse de que no haya texto en la celda
         }
       },
       // Ajustar la altura de las filas para dar espacio adicional a la imagen del código de barras
-      bodyStyles: { cellPadding: 10, rowHeight: 60 }, // Puedes ajustar el valor de rowHeight según sea necesario
+      headStyles: {
+        fontSize: 10, // Tamaño de letra para el encabezado
+      },
+      bodyStyles: {
+        fontSize: 8, // Tamaño de letra para el cuerpo
+        cellPadding: 1,
+        minCellHeight: 15,
+      },
     });
-
+  
     pdf.save("activos.pdf"); // Guardar el PDF con un nombre específico
   };
+  
+  
 
   return (
     <div style={{ margin: "20px", maxHeight: "700px", overflow: "auto" }}>
@@ -181,14 +192,15 @@ export const ActivosList = () => {
                 style={{ color: "#fff", fontWeight: "bold" }}
                 align="center"
               >
-                FACTURA
+                NO. SERIE
               </TableCell>
               <TableCell
                 style={{ color: "#fff", fontWeight: "bold" }}
                 align="center"
               >
-                FECHA DE COMPRA
+                FACTURA
               </TableCell>
+
               <TableCell
                 style={{ color: "#fff", fontWeight: "bold" }}
                 align="center"
@@ -200,6 +212,12 @@ export const ActivosList = () => {
                 align="center"
               >
                 PROVEEDOR
+              </TableCell>
+              <TableCell
+                style={{ color: "#fff", fontWeight: "bold" }}
+                align="center"
+              >
+                GRUPO
               </TableCell>
               <TableCell
                 style={{ color: "#fff", fontWeight: "bold" }}

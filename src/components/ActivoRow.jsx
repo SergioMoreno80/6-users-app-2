@@ -40,6 +40,7 @@ export const ActivoRow = ({
   estatus,
   foto,
   proveedor,
+  fabricante, grupoactivo,
   clave_busqueda,
 }) => {
   const { handlerActivoSelectedForm, handlerRemoveActivo } = useActivos();
@@ -109,10 +110,14 @@ export const ActivoRow = ({
         <TableCell component="th" scope="row" align="left">
           {nombre}
         </TableCell>
+        <TableCell align="center">{no_serie}</TableCell>
+
         <TableCell align="center">{factura}</TableCell>
-        <TableCell align="center">{formattedDate}</TableCell>
+        {/* <TableCell align="center">{formattedDate}</TableCell> */}
         <TableCell align="center">{formattedCurrency}</TableCell>
         <TableCell align="center">{proveedor}</TableCell>
+        <TableCell align="center">{grupoactivo}</TableCell>
+
         <TableCell align="center">
           <NavLink to={"/activos/edit/" + activo_id}>
             <Fab>
