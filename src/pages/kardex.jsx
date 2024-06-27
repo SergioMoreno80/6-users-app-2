@@ -41,12 +41,12 @@ export const Kardex = () => {
   const getFormattedDateTime = () => {
     const now = new Date();
     const year = now.getFullYear();
-    const month = String(now.getMonth() + 1).padStart(2, '0');
-    const day = String(now.getDate()).padStart(2, '0');
-    const hours = String(now.getHours()).padStart(2, '0');
-    const minutes = String(now.getMinutes()).padStart(2, '0');
-    const seconds = String(now.getSeconds()).padStart(2, '0');
-    
+    const month = String(now.getMonth() + 1).padStart(2, "0");
+    const day = String(now.getDate()).padStart(2, "0");
+    const hours = String(now.getHours()).padStart(2, "0");
+    const minutes = String(now.getMinutes()).padStart(2, "0");
+    const seconds = String(now.getSeconds()).padStart(2, "0");
+
     return `${year}-${month}-${day}_${hours}-${minutes}-${seconds}`;
   };
   const generatePDF = () => {
@@ -101,7 +101,7 @@ export const Kardex = () => {
         startY: titleY + 30,
         head: [["Campos", "Informacion"]],
         body: activoInfo,
-        margin: { top: tableY }
+        margin: { top: tableY },
       });
 
       // Información de los movimientos

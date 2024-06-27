@@ -1,8 +1,6 @@
-import { MovimientosRow } from "./MovimientosRow";
-import { useMovimientos } from "../hooks/useMovimientos";
-import { useAuth } from "../auth/hooks/useAuth";
 import React, { useState } from "react";
-import { NavLink } from "react-router-dom"; // Importa NavLink
+import { NavLink } from "react-router-dom";
+import { useSelector } from "react-redux";
 import {
   Table,
   TableBody,
@@ -11,24 +9,30 @@ import {
   TableHead,
   TableRow,
   Paper,
-  TextField, Fab
+  TextField,
+  Fab,
 } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
+import MovimientosRow from "./MovimientosRow"; // Ajusta la importación según la estructura de tu proyecto
 
 export const MovimientosList = () => {
-  const [isTableExpanded, setTableExpanded] = useState(true);
-  const { movimientos } = useMovimientos();
-  const { login } = useAuth();
   const [searchTerm, setSearchTerm] = useState("");
-  const searchColumns = ['descripcion', 'tipo_movimiento', 'id_departamento']; // Columnas en las que se realizará la búsqueda
+  const { movimientos } = useSelector(
+    (state) => state.movimientos
+  ); // Ajusta según la estructura de tu estado en Redux
 
   const handleSearchTermChange = (event) => {
     setSearchTerm(event.target.value);
   };
 
-  const filteredMovimientos = movimientos.filter((mov) =>
+  const searchColumns = ["descripcion", "tipo_movimiento", "id_departamento"]; // Columnas en las que se realizará la búsqueda
+
+  const filteredMovimientos = movimientos.filter((movimiento) =>
     searchColumns.some((column) =>
-      mov[column]?.toString().toLowerCase().includes(searchTerm.toLowerCase())
+      movimiento[column]
+        ?.toString()
+        .toLowerCase()
+        .includes(searchTerm.toLowerCase())
     )
   );
 
@@ -58,9 +62,7 @@ export const MovimientosList = () => {
       <TableContainer
         component={Paper}
         style={{
-          marginLeft: isTableExpanded ? "40px" : "40",
           marginTop: "10px",
-          transition: "margin-left 0.3s ease-in-out",
           overflowX: "auto",
         }}
       >
@@ -70,32 +72,56 @@ export const MovimientosList = () => {
               <TableCell style={{ color: "#fff", fontWeight: "bold" }}>
                 ID
               </TableCell>
-              <TableCell style={{ color: "#fff", fontWeight: "bold" }} align="center">
+              <TableCell
+                style={{ color: "#fff", fontWeight: "bold" }}
+                align="center"
+              >
                 TIPO DE MOVIMIENTO
               </TableCell>
-              <TableCell style={{ color: "#fff", fontWeight: "bold" }} align="center">
+              <TableCell
+                style={{ color: "#fff", fontWeight: "bold" }}
+                align="center"
+              >
                 FECHA DE MOVIMIENTO
               </TableCell>
-              <TableCell style={{ color: "#fff", fontWeight: "bold" }} align="center">
+              <TableCell
+                style={{ color: "#fff", fontWeight: "bold" }}
+                align="center"
+              >
                 DESCRIPCION
               </TableCell>
-              <TableCell style={{ color: "#fff", fontWeight: "bold" }} align="center">
+              <TableCell
+                style={{ color: "#fff", fontWeight: "bold" }}
+                align="center"
+              >
                 SUCURSAL
               </TableCell>
-              <TableCell style={{ color: "#fff", fontWeight: "bold" }} align="center">
+              <TableCell
+                style={{ color: "#fff", fontWeight: "bold" }}
+                align="center"
+              >
                 DEPARTAMENTO
               </TableCell>
-              <TableCell style={{ color: "#fff", fontWeight: "bold" }} align="center">
+              <TableCell
+                style={{ color: "#fff", fontWeight: "bold" }}
+                align="center"
+              >
                 PERSONAL
               </TableCell>
-              <TableCell style={{ color: "#fff", fontWeight: "bold" }} align="center">
+              <TableCell
+                style={{ color: "#fff", fontWeight: "bold" }}
+                align="center"
+              >
                 PDF
               </TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
-            {filteredMovimientos.map((mov) => (
-              <MovimientosRow key={mov.id} {...mov} />
+            {filteredMovimientos.map((movimiento) => (
+              <MovimientosRow
+                key={movimiento.id}
+                movimiento={movimiento}
+              />
             ))}
           </TableBody>
         </Table>

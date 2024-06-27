@@ -11,7 +11,6 @@
   "dependencies": {
     "@emotion/react": "^11.11.1",
     "@emotion/styled": "^11.11.0",
-    "@fontsource/roboto": "^5.0.8",
     "@heroicons/react": "^2.0.18",
     "@material-tailwind/react": "^2.1.5",
     "@mui/icons-material": "^5.14.19",
@@ -28,6 +27,8 @@
     "bootstrap": "^5.3.2",
     "date-fns": "^2.30.0",
     "dayjs": "^1.11.10",
+    "fsevents": "^2.3.3",
+    "html-webpack-plugin": "^5.6.0",
     "html2canvas": "^1.4.1",
     "jspdf": "^2.5.1",
     "jspdf-autotable": "^3.8.2",
@@ -43,6 +44,7 @@
     "react-router-dom": "^6.8.1",
     "react-scripts": "^3.0.1",
     "react-scroll": "^1.9.0",
+    "rimraf": "^5.0.7",
     "styled-components": "^6.1.1",
     "sweetalert2": "^11.6.13"
   },

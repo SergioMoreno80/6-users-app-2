@@ -12,8 +12,6 @@ export const MovimientosPage = () => {
     movimientos,
     visibleForm,
     isLoading,
-    paginator,
-    handlerOpenForm,
     getListMov,
   } = useMovimientos();
 

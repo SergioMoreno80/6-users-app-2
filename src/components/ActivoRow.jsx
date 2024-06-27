@@ -134,11 +134,11 @@ export const ActivoRow = ({
             <RemoveIcon />
           </Fab>
         </TableCell>
-        <TableCell align="center">
+        {/* <TableCell align="center">
           <Fab color="primary" aria-label="add" onClick={handleGeneratePDF}>
             <PictureAsPdfIcon />
           </Fab>
-        </TableCell>
+        </TableCell> */}
       </TableRow>
     </React.Fragment>
   );

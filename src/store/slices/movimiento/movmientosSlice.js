@@ -1,4 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
+
 export const initialMovimientoForm = {
   id: 0,
   tipo_movimiento: "",
@@ -18,16 +19,6 @@ export const initialDetalleForm = {
   cantidad: "",
 };
 
-// export const initialMovimientoForm = {
-//   id: 0,
-//   tipo_movimiento: "",
-//   fecha_movimiento: "",
-//   descripcion: "",
-//   id_sucursal: "",
-//   id_departamento: "",
-//   empleado_id: "",
-//   user_id: "",
-// };
 const initialErrors = {
   id: 0,
   tipo_movimiento: "",
@@ -43,52 +34,54 @@ const initialErrors = {
 export const movimientosSlice = createSlice({
   name: "movimientos",
   initialState: {
-    movimientos: [], //lista
-    detalles: [], // lista de detalles
-    paginator: {}, //paginacion
+    movimientos: [],
+    detallesMovimiento: [],
+    detallesByMovimiento: [], // Nuevo campo para detalles de un movimiento específico
+    paginator: {},
     movimientoSelected: initialMovimientoForm,
     detalleSelected: initialDetalleForm,
     visibleForm: false,
-    errors: initialErrors, //errores
-    isLoading: true, //carga
+    errors: initialErrors,
+    isLoading: true,
+    isLoadingDetails: true, // Separate isLoading state for details
+
   },
   reducers: {
     addMovimiento: (state, action) => {
-      //acciones
-      state.movimientos = [
-        ...state.movimientos,
-        {
-          ...action.payload.movimiento,
-        },
-      ];
-      state.detalles = [
-        ...state.detalles,
-        {
-          ...action.payload.detalle,
-        },
-      ];
+      state.movimientos = [...state.movimientos, action.payload.movimiento];
+      state.detallesMovimiento = [...state.detallesMovimiento, action.payload.detalle];
 
-      state.movimientoSelected = initialMovimientoForm; //reiniciar estado
-      state.detalleSelected = initialDetalleForm; // reiniciar estado del detalle
-
+      state.movimientoSelected = initialMovimientoForm;
+      state.detalleSelected = initialDetalleForm;
       state.visibleForm = false;
     },
     removeMovimiento: (state, action) => {
       state.movimientos = state.movimientos.filter(
         (movimiento) => movimiento.id !== action.payload
       );
+      state.detallesMovimiento = state.detallesMovimiento.filter(
+        (detalle) => detalle.movimiento_id !== action.payload
+      );
     },
     updateMovimiento: (state, action) => {
-      state.movimientos = state.movimientos.map((u) => {
-        if (u.id === action.payload.id) {
-          return {
-            ...action.payload,
-          };
-        }
-        return u;
-      });
-      state.movimientoSelected = initialMovimientoForm; //reinciar estado
+      state.movimientos = state.movimientos.map((movimiento) =>
+        movimiento.id === action.payload.id ? action.payload : movimiento
+      );
+      state.movimientoSelected = initialMovimientoForm;
       state.visibleForm = false;
+    },
+    addDetalleMovimiento: (state, action) => {
+      state.detallesMovimiento = [...state.detallesMovimiento, action.payload];
+    },
+    removeDetalleMovimiento: (state, action) => {
+      state.detallesMovimiento = state.detallesMovimiento.filter(
+        (detalle) => detalle.id !== action.payload
+      );
+    },
+    updateDetalleMovimiento: (state, action) => {
+      state.detallesMovimiento = state.detallesMovimiento.map((detalle) =>
+        detalle.id === action.payload.id ? action.payload : detalle
+      );
     },
     loadingInitialData: (state) => {
       state.isLoading = true;
@@ -100,14 +93,16 @@ export const movimientosSlice = createSlice({
       state.isLoading = false;
     },
     loadingData: (state, { payload }) => {
-      console.log('loadingData mov Slice', payload); // Agregar un console.log() para imprimir los datos de payload
       state.movimientos = payload;
       state.isLoading = false;
     },
     loadingDatabyActivo: (state, { payload }) => {
-       console.log('loadingData ByActivo Slice', payload); // Agregar un console.log() para imprimir los datos de payload
       state.movimientos = payload;
       state.isLoading = false;
+    },
+    loadingDetallesbyMovimiento: (state, { payload }) => {
+      state.detallesByMovimiento = payload;
+      state.isLoadingDetails = false; // Puedes ajustar esto dependiendo de cómo manejes la carga de detalles
     },
     onMovimientoSelectedForm: (state, { payload }) => {
       state.movimientoSelected = payload;
@@ -135,12 +130,18 @@ export const {
   addMovimiento,
   removeMovimiento,
   updateMovimiento,
+  addDetalleMovimiento,
+  removeDetalleMovimiento,
+  updateDetalleMovimiento,
   loadingMov,
   loadingData,
   loadingDatabyActivo,
+  loadingDetallesbyMovimiento,
   onMovimientoSelectedForm,
   onDetalleSelectedForm,
   onOpenForm,
   onCloseForm,
   loadingError,
 } = movimientosSlice.actions;
+
+export default movimientosSlice.reducer;

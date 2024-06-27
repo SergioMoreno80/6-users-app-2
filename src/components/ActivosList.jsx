@@ -37,7 +37,13 @@ export const ActivosList = () => {
   const { activos } = useActivos();
   const [searchTerm, setSearchTerm] = useState("");
   const { login } = useAuth();
-  const searchColumns = ["nombre", "proveedor", "factura", "grupoactivo", "no_serie"]; // Columnas en las que se realizará la búsqueda
+  const searchColumns = [
+    "nombre",
+    "proveedor",
+    "factura",
+    "grupoactivo",
+    "no_serie",
+  ]; // Columnas en las que se realizará la búsqueda
 
   const handleSearchTermChange = (event) => {
     setSearchTerm(event.target.value);
@@ -51,7 +57,7 @@ export const ActivosList = () => {
 
   const generatePDF = () => {
     const pdf = new jsPDF();
-  
+
     const rows = filteredActivos.map((activo) => {
       let barcodeData;
       try {
@@ -62,26 +68,22 @@ export const ActivosList = () => {
         console.error("Error al generar el código de barras:", error);
         barcodeData = ""; // Si hay un error, dejar el código de barras en blanco
       }
-  
+
       return [
         activo.nombre,
         activo.no_serie,
         activo.grupoactivo,
-        { content: '', image: barcodeData, width: 100, height: 40 }, // Inicializar correctamente la celda de la imagen
+        { content: "", image: barcodeData, width: 100, height: 40 }, // Inicializar correctamente la celda de la imagen
       ];
     });
-  
+
     pdf.autoTable({
       head: [["Nombre", "No. Serie", "Grupo", "Codigo"]], // Encabezado de la tabla
       body: rows, // Cuerpo de la tabla
       didDrawCell: (data) => {
         // Verificar si es la celda de la imagen y renderizar la imagen correctamente
-        
-        if (
-          data.column.index === 3 &&
-          data.cell.raw &&
-          data.cell.raw.image
-        ) {
+
+        if (data.column.index === 3 && data.cell.raw && data.cell.raw.image) {
           const { x, y, width, height } = data.cell;
           pdf.addImage(
             data.cell.raw.image,
@@ -91,7 +93,7 @@ export const ActivosList = () => {
             width - 4,
             height - 4
           );
-          data.cell.text = ''; // Asegurarse de que no haya texto en la celda
+          data.cell.text = ""; // Asegurarse de que no haya texto en la celda
         }
       },
       // Ajustar la altura de las filas para dar espacio adicional a la imagen del código de barras
@@ -104,11 +106,9 @@ export const ActivosList = () => {
         minCellHeight: 15,
       },
     });
-  
+
     pdf.save("activos.pdf"); // Guardar el PDF con un nombre específico
   };
-  
-  
 
   return (
     <div style={{ margin: "20px", maxHeight: "700px", overflow: "auto" }}>
@@ -231,12 +231,12 @@ export const ActivosList = () => {
               >
                 ELIMINAR
               </TableCell>
-              <TableCell
+              {/* <TableCell
                 style={{ color: "#fff", fontWeight: "bold" }}
                 align="center"
               >
                 PDF
-              </TableCell>
+              </TableCell> */}
             </TableRow>
           </TableHead>
 
@@ -245,7 +245,6 @@ export const ActivosList = () => {
               <ActivoRow key={activo.activo_id} {...activo} />
             ))}
           </TableBody>
-          
         </Table>
         <IconButton
           onClick={toggleTableSize}

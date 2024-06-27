@@ -27,6 +27,19 @@ export const findByActivoId = async (activoId) => {
   }
 };
 
+export const findByMovId = async (id) => {
+  try {
+    const response = await detallesMovimientosApi.get(`${BASE_URL}/movimientos/${id}`);
+    console.log("API response for findByMovId:", response.data);
+
+    return response.data;
+  } catch (error) {
+    console.log("Error findByMovId:", error);
+
+    throw error;
+  }
+};
+
 export const findAllPages = async (page = 0) => {
   try {
     const response = await movimientosApi.get(`${BASE_URL}/page/${page}`);

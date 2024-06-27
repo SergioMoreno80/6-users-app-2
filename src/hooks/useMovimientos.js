@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
-import { findAll,findByActivoId,findAllPages, remove, save, update, saveDetalles  } from "../services/movimientoService";
+import { findAll,findByActivoId,findByMovId,findAllPages, remove, save, update, saveDetalles  } from "../services/movimientoService";
 
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -12,6 +12,7 @@ import {
   loadingMov,
   loadingData,
   loadingDatabyActivo,
+  loadingDetallesbyMovimiento,
   onMovimientoSelectedForm,
   onDetalleSelectedForm,
   onOpenForm,
@@ -22,8 +23,13 @@ import {
 import { useAuth } from "../auth/hooks/useAuth";
 
 export const useMovimientos = () => {
-  const { movimientos, movimientoSelected, visibleForm, errors, isLoading, paginator } =
-    useSelector((state) => state.movimientos);
+  // const { movimientos, movimientoSelected, visibleForm, errors, isLoading, paginator } =
+  //   useSelector((state) => state.movimientos);
+    const { movimientos, detallesByMovimiento, paginator, movimientoSelected, 
+      detalleSelected, visibleForm, errors, isLoading, isLoadingDetails } = useSelector((state) => state.movimientos);
+
+// const { detallesByMovimiento, detalleSelected } =
+//     useSelector((state) => state.detallesByMovimiento);
   const dispatch = useDispatch();
 
   const navigate = useNavigate();
@@ -61,6 +67,20 @@ export const useMovimientos = () => {
       const result = await findByActivoId(activoId);
       console.log("Lista de movimientos por activo UseMov :", result); 
       dispatch(loadingDatabyActivo(result));
+    } catch (error) {
+      if (error.response?.status == 401) {
+        handlerLogout();
+    }else {
+      throw error; // Lanza el error para que el componente que utiliza el hook pueda manejarlo
+    }
+    }
+  };
+
+  const getListByMov = async (id) => {
+    try {
+      const result = await findByMovId(id);
+      console.log("Lista de detalles de movimientos por movimiento DetMov :", result); 
+      dispatch(loadingDetallesbyMovimiento(result));
     } catch (error) {
       if (error.response?.status == 401) {
         handlerLogout();
@@ -177,11 +197,14 @@ export const useMovimientos = () => {
   return {
     movimientos,
     movimientoSelected,
+    detallesByMovimiento,
+    detalleSelected,
     initialMovimientoForm,
     initialDetalleForm,
     visibleForm,
     errors,
     isLoading,
+    isLoadingDetails,
     paginator,
     handlerAddMovimiento,
     handlerRemoveMovimiento,
@@ -191,6 +214,6 @@ export const useMovimientos = () => {
     handlerCloseForm,
     getMovimientos,
     getListMov,
-    getListByActivo,
+    getListByActivo,getListByMov,
   };
 };
